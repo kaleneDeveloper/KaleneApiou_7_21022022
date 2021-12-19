@@ -4,10 +4,9 @@
         <HelloWorld msg="Welcome to Your Vue.js App" />
         <div>
             <h2>Welcome {{ users.username }}</h2>
-            <h3>{{ users.username }}</h3>
-            <h4>{{ users.email }}</h4>
-            <p>{{ users.profile[0].id }}</p>
-            <!-- <a v-bind:href="imgUrl">Image de profile</a> -->
+            <h3>{{ username }}</h3>
+            <h4>{{ email }}</h4>
+            <a v-bind:href="imgUrl">Image de profile</a>
         </div>
     </div>
 </template>
@@ -25,6 +24,23 @@ export default {
         return {
             users: [],
         };
+    },
+    computed: {
+        imgUrl() {
+            return this.users.profile && this.users.profile.length > 0
+                ? this.users.profile[0].imgUrl
+                : "";
+        },
+        username() {
+            return this.users.profile && this.users.profile.length > 0
+                ? this.users.profile[0].username
+                : "";
+        },
+        email() {
+            return this.users.profile && this.users.profile.length > 0
+                ? this.users.profile[0].email
+                : "";
+        },
     },
     mounted: function () {
         if (this.$store.state.user.userId === 0) {
