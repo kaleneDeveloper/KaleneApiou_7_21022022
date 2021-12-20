@@ -1,17 +1,18 @@
 const jwt = require("jsonwebtoken");
-// const dotenv = require("dotenv").config({ encoding: "latin1" });
+const dotenv = require("dotenv").config({ encoding: "latin1" });
 
 module.exports = (req, res, next) => {
-    try {
-        const token = req.headers.authorization.split(" ")[1];
-        const decodedToken = jwt.verify(token, "TOKEN_SECRET");
-        const userId = decodedToken.userId;
-        if (req.body.userId && req.body.userId !== userId) {
-            throw "User id no valid";
-        } else {
-            next();
-        }
-    } catch (error) {
-        res.status(401).json({ error: error | "Requete unidentified" });
+    const authHeader = req.headers["authorization"];
+    const token = authHeader && authHeader.split(" ")[1];
+
+    if (!token) {
+        return res.status(401).json({ message: "Auth failed" });
     }
+    jwt.verify(token, process.env.TOKEN_KEY, (err, authData) => {
+        if (err) {
+            return res.status(401).json({ message: "Unauthorized" });
+        }
+        req.auth = authData;
+        next();
+    });
 };

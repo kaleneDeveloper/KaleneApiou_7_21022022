@@ -61,9 +61,8 @@ app.post("/comment", async (req, res) => {
     }
 });
 
-app.use("/api/auth", userRoutes);
-app.use("/api/posts", postRouter);
 app.use("/api/users", userRoutes);
+app.use("/api/posts", postRouter);
 
 app.use("/images", express.static(path.join(__dirname, "images")));
 

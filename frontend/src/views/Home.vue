@@ -28,7 +28,7 @@ export default {
     computed: {
         imgUrl() {
             return this.users.profile && this.users.profile.length > 0
-                ? this.users.profile[0].imgUrl
+                ? this.users.profile[0].imageUrl
                 : "";
         },
         username() {

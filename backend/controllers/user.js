@@ -3,6 +3,8 @@ const { Profile } = require("../models");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const fs = require("fs");
+const dotenv = require("dotenv").config({ encoding: "latin1" });
+
 exports.signup = async (req, res) => {
     const { username, admin, email } = req.body;
     const password = bcrypt.hashSync(req.body.password, 10);
@@ -52,15 +54,14 @@ exports.login = async (req, res) => {
                     email: user.email,
                     admin: user.admin,
                 },
-                "TOKEN_SECRET",
+                process.env.TOKEN_KEY,
                 { expiresIn: "24h" }
             );
             return res.status(200).send({
                 token: token,
-                userId: user.id,
                 uuid: user.uuid,
-                admin: user.admin,
-                expiresIn: "24h",
+                // userId: user.id,
+                // admin: user.admin,
             });
         })
         .catch((error) => res.status(500).json({ error }));
@@ -86,7 +87,6 @@ exports.findOne = async (req, res) => {
         res.status(500).send(error);
     }
 };
-
 exports.updateProfile = async (req, res) => {
     if (req.file) {
         const { username, lastname, age, email, password } = req.body;
@@ -113,8 +113,8 @@ exports.updateProfile = async (req, res) => {
                 where: { userUuid: req.params.uuid },
             });
             return res.send(user);
-        } catch (error){
-           res.status(500).send(error);
+        } catch (error) {
+            res.status(500).send(error);
         }
     } else {
         try {
@@ -135,4 +135,7 @@ exports.updateProfile = async (req, res) => {
             res.status(500).send(error);
         }
     }
+};
+exports.getToken = async (req, res) => {
+    res.send(req.auth);
 };

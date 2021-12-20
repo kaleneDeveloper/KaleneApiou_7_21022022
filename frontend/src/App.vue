@@ -6,7 +6,7 @@
                 <router-link to="/about">About</router-link> |
                 <router-link to="/posts">Posts</router-link>
             </div>
-            <button @click="logout">Deconnexion</button>
+            <button v-if="this.$store.state.user.userId !== 0" @click="logout">Deconnexion</button>
         </div>
         <router-view />
     </div>
