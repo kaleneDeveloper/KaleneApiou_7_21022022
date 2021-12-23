@@ -50,7 +50,7 @@ exports.login = async (req, res) => {
             const token = jwt.sign(
                 {
                     userId: user.id,
-                    Uuid: user.uuid,
+                    uuid: user.uuid,
                     email: user.email,
                     admin: user.admin,
                 },
@@ -59,9 +59,7 @@ exports.login = async (req, res) => {
             );
             return res.status(200).send({
                 token: token,
-                uuid: user.uuid,
-                // userId: user.id,
-                // admin: user.admin,
+                userId: user.id,
             });
         })
         .catch((error) => res.status(500).json({ error }));

@@ -3,7 +3,7 @@
         <img alt="Vue logo" src="../assets/logo.png" />
         <HelloWorld msg="Welcome to Your Vue.js App" />
         <div>
-            <h2>Welcome {{ users.username }}</h2>
+            <h2>Welcome {{ username }}</h2>
             <h3>{{ username }}</h3>
             <h4>{{ email }}</h4>
             <a v-bind:href="imgUrl">Image de profile</a>
@@ -47,9 +47,9 @@ export default {
             this.$router.push("/login");
             return;
         }
+        this.$store.dispatch("getUserToken");
         this.$store.dispatch("getUserInfos").then((response) => {
             this.users = response.data;
-            console.log(response.data);
         });
     },
 };
