@@ -12,11 +12,6 @@ module.exports = (sequelize, DataTypes) => {
                 as: "profile",
             });
         }
-        toJSON() {
-            const values = Object.assign({}, this.get());
-            delete values.id;
-            return values;
-        }
     }
     User.init(
         {

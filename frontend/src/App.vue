@@ -1,19 +1,87 @@
 <template>
-    <div id="app">
-        <div id="home">
-            <div id="nav">
-                <router-link to="/">Home</router-link> |
-                <router-link to="/about">About</router-link> |
-                <router-link to="/posts">Posts</router-link>
-            </div>
-            <button v-if="this.$store.state.user.userId !== 0" @click="logout">Deconnexion</button>
-        </div>
-        <router-view />
-    </div>
+    <v-app id="inspire">
+        <!-- MOBILE -->
+        <v-main>
+            <v-navigation-drawer v-model="drawer" app>
+                <div id="home">
+                    <v-list nav dense>
+                        <v-list-item-group
+                            active-class="deep-purple--text text--accent-4"
+                        >
+                            <router-link to="/">
+                                <v-list-item>
+                                    <v-list-item-icon>
+                                        <v-icon large>mdi-home</v-icon>
+                                    </v-list-item-icon>
+                                    <v-list-item-title>
+                                        <span>Home</span>
+                                    </v-list-item-title>
+                                </v-list-item>
+                            </router-link>
+
+                            <router-link to="/about">
+                                <v-list-item class="d-flex justify-center test">
+                                    <v-list-item-icon>
+                                        <v-icon large>mdi-account</v-icon>
+                                    </v-list-item-icon>
+                                    <v-list-item-title
+                                        ><span>About</span></v-list-item-title
+                                    >
+                                </v-list-item>
+                            </router-link>
+
+                            <router-link to="/posts">
+                                <v-list-item>
+                                    <v-list-item-icon>
+                                        <v-icon large>mdi-post</v-icon>
+                                    </v-list-item-icon>
+                                    <v-list-item-title
+                                        ><span>Posts</span>
+                                    </v-list-item-title>
+                                </v-list-item>
+                            </router-link>
+                            <v-list-item
+                                v-if="this.$store.state.user.userId !== 0"
+                            >
+                                <button class="logout" @click="logout">
+                                    Deconnexion
+                                </button>
+                            </v-list-item>
+                        </v-list-item-group>
+                    </v-list>
+                </div>
+            </v-navigation-drawer>
+            <v-app-bar app id="nav-bar">
+                <v-app-bar-nav-icon
+                    @click="drawer = !drawer"
+                ></v-app-bar-nav-icon>
+                <v-toolbar-title>Groupamania</v-toolbar-title>
+            </v-app-bar>
+            <router-view />
+        </v-main>
+        <!-- DESKTOP -->
+        <v-main> </v-main>
+    </v-app>
 </template>
 
 <script>
+import colors from 'vuetify/lib/util/colors'
 export default {
+    theme: {
+        themes: {
+            light: {
+                primary: colors.purple,
+                secondary: colors.grey.darken1,
+                accent: colors.indigo.red,
+                error: colors.red.accent3,
+            
+            },
+        },
+    },
+    name: "App",
+    data: () => ({
+        drawer: null,
+    }),
     methods: {
         logout: function () {
             this.$store.dispatch("logout");
@@ -22,9 +90,20 @@ export default {
     },
 };
 </script>
-
 <style>
 @import url("./style/reset.css");
+#nav-bar {
+    margin-top: 2rem;
+}
+.v-icon.v-icon.mdi-home {
+    text-decoration: none;
+}
+.v-application a {
+    text-decoration: none;
+}
+span {
+    font-size: 1rem;
+}
 #app {
     font-family: Avenir, Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -35,27 +114,20 @@ export default {
 }
 #nav {
     padding: 30px;
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translate(-50%);
+    display: grid;
+    justify-content: center;
 }
-
 #nav a {
     font-weight: bold;
     color: #2c3e50;
 }
-
 #nav a.router-link-exact-active {
     color: #42b983;
 }
 #home {
-    display: flex;
-    justify-content: end;
-    align-items: center;
-    margin: 1rem;
+    display: grid;
 }
-button {
+.logout {
     height: 2rem;
     border-radius: 5px;
     border: none;
@@ -64,6 +136,9 @@ button {
     font-weight: bold;
     font-size: 12px;
     cursor: pointer;
-    margin-left: 0.5rem;
+    margin: auto;
+    padding: 0 1rem;
+    max-width: 100px;
 }
+
 </style>

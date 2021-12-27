@@ -9,6 +9,10 @@ module.exports = (sequelize, DataTypes) => {
                 foreignKey: "postId",
             });
             this.belongsTo(models.User, { foreignKey: "userId", as: "user" });
+            this.hasMany(models.Comment, {
+                foreignKey: "postId",
+                as: "comments",
+            });
         }
         toJSON() {
             const values = Object.assign({}, this.get());

@@ -1,7 +1,7 @@
 const express = require("express");
-const { sequelize, User, Post, Comment } = require("./models");
 const userRoutes = require("./routes/user");
 const postRouter = require("./routes/post");
+const commentRouter = require("./routes/comment");
 const path = require("path");
 
 const app = express();
@@ -19,48 +19,7 @@ app.use((req, res, next) => {
 });
 app.use(express.json());
 
-app.get("/comments", async (req, res) => {
-    try {
-        const comments = await Comment.findAll({
-            include: ["user", "post"],
-        });
-        return res.send(comments);
-    } catch (error) {
-        res.status(500).send(error);
-    }
-});
-app.get("/comments/:uuid", async (req, res) => {
-    try {
-        const user = await User.findOne({
-            where: { uuid: req.params.uuid },
-        });
-        const comments = await Comment.findAll({ where: { userId: user.id } });
-        return res.send(comments);
-    } catch (error) {
-        res.status(500).send(error);
-    }
-});
-app.post("/comment", async (req, res) => {
-    const { postUuid, content, userUuid, imageUrl } = req.body;
-    try {
-        const user = await User.findOne({
-            where: { uuid: userUuid },
-        });
-        const post = await Post.findOne({
-            where: { uuid: postUuid },
-        });
-        const comment = await Comment.create({
-            content,
-            postId: post.id,
-            userId: user.id,
-            imageUrl,
-        });
-        return res.send(comment);
-    } catch (error) {
-        res.status(500).send(error);
-    }
-});
-
+app.use("/api/comments", commentRouter);
 app.use("/api/users", userRoutes);
 app.use("/api/posts", postRouter);
 

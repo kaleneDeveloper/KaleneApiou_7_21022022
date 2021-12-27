@@ -7,6 +7,7 @@ module.exports = (sequelize, DataTypes) => {
         static associate(models) {
             this.belongsTo(models.Post, { foreignKey: "postId", as: "post" });
             this.belongsTo(models.User, { foreignKey: "userId", as: "user" });
+            this.belongsTo(models.Post, { foreignKey: "postId" });
         }
         toJSON() {
             const values = Object.assign({}, this.get());

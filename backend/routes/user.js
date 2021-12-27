@@ -1,4 +1,5 @@
 const express = require("express");
+const multer = require("../middleware/multer-config");
 const router = express.Router();
 const userCtrl = require("../controllers/user");
 const auth = require("../middleware/auth");
@@ -11,6 +12,6 @@ router.get("/", userCtrl.findAll);
 
 router.get("/token", auth, userCtrl.getToken);
 
-router.put("/profile/:uuid", userCtrl.updateProfile);
+router.put("/profile/:uuid", multer, userCtrl.updateProfile);
 
 module.exports = router;

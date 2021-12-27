@@ -130,9 +130,8 @@ export default {
                     email: this.email,
                     password: this.password,
                 })
-                .then((response) => {
+                .then(() => {
                     this.$router.push("/");
-                    console.log(response);
                 })
                 .catch((error) => {
                     console.log(error);

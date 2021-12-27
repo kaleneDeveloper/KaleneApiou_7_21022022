@@ -87,19 +87,19 @@ exports.findOne = async (req, res) => {
 };
 exports.updateProfile = async (req, res) => {
     if (req.file) {
-        const { username, lastname, age, email, password } = req.body;
+        const { username, lastName, age, email, password } = req.body;
         try {
             const user = await User.findOne({
                 where: { uuid: req.params.uuid },
                 include: ["profile"],
             });
-            const filename = user.profile.imageUrl.split(
+            const filename = user.profile[0].imageUrl.split(
                 "/images/uploads/profile/"
             )[1];
             fs.unlink(`./images/uploads/profile/${filename}`, () => {});
             const profilObject = {
                 username,
-                lastname,
+                lastName,
                 age,
                 email,
                 password,
@@ -110,25 +110,26 @@ exports.updateProfile = async (req, res) => {
             await Profile.update(profilObject, {
                 where: { userUuid: req.params.uuid },
             });
-            return res.send(user);
+            return res.send(profilObject);
         } catch (error) {
             res.status(500).send(error);
         }
     } else {
         try {
-            const { username, lastname, age, email, password, imageUrl } =
+            const { username, lastName, age, email, password, imageUrl } =
                 req.body;
-            const profilObject = {
+            const profileObject = {
                 username,
-                lastname,
+                lastName,
                 age,
                 email,
                 password,
                 imageUrl,
             };
-            await Profile.update(profilObject, {
+            await Profile.update(profileObject, {
                 where: { userUuid: req.params.uuid },
             });
+            return res.send(profileObject);
         } catch (error) {
             res.status(500).send(error);
         }
