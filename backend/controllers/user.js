@@ -96,6 +96,7 @@ exports.updateProfile = async (req, res) => {
             const filename = user.profile[0].imageUrl.split(
                 "/images/uploads/profile/"
             )[1];
+            console.log(filename + "test");
             fs.unlink(`./images/uploads/profile/${filename}`, () => {});
             const profilObject = {
                 username,

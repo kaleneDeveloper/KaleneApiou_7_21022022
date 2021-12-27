@@ -14,12 +14,6 @@ module.exports = (sequelize, DataTypes) => {
                 as: "comments",
             });
         }
-        toJSON() {
-            const values = Object.assign({}, this.get());
-            delete values.id;
-            delete values.userId;
-            return values;
-        }
     }
     Post.init(
         {
