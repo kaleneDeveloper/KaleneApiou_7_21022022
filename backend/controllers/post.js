@@ -130,3 +130,18 @@ exports.modifyPost = async (req, res) => {
         }
     }
 };
+exports.deletePost = async (req, res) => {
+    try {
+        const post = await Post.findOne({
+            where: { uuid: req.params.uuid },
+        });
+        // const filename = post.imageUrl.split("/images/uploads/posts/")[1];
+        // fs.unlink(`./images/uploads/posts/${filename}`, () => {});
+        await Post.destroy({
+            where: { uuid: req.params.uuid },
+        });
+        return res.send(post);
+    } catch (error) {
+        res.status(500).send(error);
+    }
+};

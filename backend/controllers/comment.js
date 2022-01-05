@@ -41,3 +41,13 @@ exports.commentCreate = async (req, res) => {
         res.status(500).send(error);
     }
 };
+exports.commentDelete = async (req, res) => {
+    try {
+        const comment = await Comment.destroy({
+            where: { uuid: req.params.uuid },
+        });
+        return res.json(comment);
+    } catch (error) {
+        res.status(500).json(error);
+    }
+};

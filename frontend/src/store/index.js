@@ -89,9 +89,9 @@ const store = new Vuex.Store({
                 state;
             });
         },
-        async getUserToken({ commit }) {
+        getUserToken({ commit }) {
             const token = store.state.user.token;
-            await instance
+            instance
                 .get("/api/users/token", {
                     headers: { Authorization: `Bearer ${token}` },
                 })
@@ -116,7 +116,7 @@ const store = new Vuex.Store({
                     });
             });
         },
-        async getUserPosts() {
+        getUserPosts() {
             const token = store.state.user.token;
             const uuid = store.state.userToken.uuid;
             return new Promise((resolve, reject) => {
@@ -132,7 +132,7 @@ const store = new Vuex.Store({
                     });
             });
         },
-        async getPosts() {
+        getPosts() {
             const token = store.state.user.token;
             return new Promise((resolve, reject) => {
                 instance
@@ -147,11 +147,76 @@ const store = new Vuex.Store({
                     });
             });
         },
-        async modifyPost(uuid) {
+        modifyPost({ commit }, uuid) {
             const token = store.state.user.token;
             return new Promise((resolve, reject) => {
+                commit;
                 instance
                     .put("/api/posts/" + uuid, {
+                        headers: { Authorization: `Bearer ${token}` },
+                    })
+                    .then((response) => {
+                        resolve(response);
+                    })
+                    .catch((error) => {
+                        reject(error);
+                    });
+            });
+        },
+        deleteComment: ({ commit }, uuid) => {
+            const token = store.state.user.token;
+            return new Promise((resolve, reject) => {
+                commit;
+                instance
+                    .delete("/api/comments/" + uuid, {
+                        headers: { Authorization: `Bearer ${token}` },
+                    })
+                    .then((response) => {
+                        resolve(response);
+                    })
+                    .catch((error) => {
+                        reject(error);
+                    });
+            });
+        },
+        addComment: ({ commit }, comment) => {
+            const token = store.state.user.token;
+            return new Promise((resolve, reject) => {
+                commit;
+                instance
+                    .post("/api/comments", comment, {
+                        headers: { Authorization: `Bearer ${token}` },
+                    })
+                    .then((response) => {
+                        resolve(response);
+                    })
+                    .catch((error) => {
+                        reject(error);
+                    });
+            });
+        },
+        addPost: ({ commit }, post) => {
+            const token = store.state.user.token;
+            return new Promise((resolve, reject) => {
+                commit;
+                instance
+                    .post("/api/posts", post, {
+                        headers: { Authorization: `Bearer ${token}` },
+                    })
+                    .then((response) => {
+                        resolve(response);
+                    })
+                    .catch((error) => {
+                        reject(error);
+                    });
+            });
+        },
+        deletePost: ({ commit }, uuid) => {
+            const token = store.state.user.token;
+            return new Promise((resolve, reject) => {
+                commit;
+                instance
+                    .delete("/api/posts/" + uuid, {
                         headers: { Authorization: `Bearer ${token}` },
                     })
                     .then((response) => {

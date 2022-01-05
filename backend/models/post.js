@@ -5,9 +5,6 @@ const { v4: uuidv4 } = require("uuid");
 module.exports = (sequelize, DataTypes) => {
     class Post extends Model {
         static associate(models) {
-            this.hasMany(models.Comment, {
-                foreignKey: "postId",
-            });
             this.belongsTo(models.User, { foreignKey: "userId", as: "user" });
             this.hasMany(models.Comment, {
                 foreignKey: "postId",

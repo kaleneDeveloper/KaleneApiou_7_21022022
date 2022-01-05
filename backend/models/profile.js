@@ -3,9 +3,13 @@ const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
     class profile extends Model {
         static associate(models) {
-            this.belongsTo(models.User, { foreignKey: "userId" });
+            this.belongsTo(models.User, {
+                foreignKey: "userId",
+                onDelete: "CASCADE",
+            });
         }
     }
+
     profile.init(
         {
             userId: { type: DataTypes.INTEGER, allowNull: false },
@@ -18,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.STRING,
                 allowNull: false,
                 defaultValue:
-                    "http://localhost:3000/images/uploads/profil/4e533874991ea469a1e791fa5c3f9754_1639244825986.jpg",
+                    "http://localhost:3000/images/uploads/profile/blank-profile.png",
             },
             age: { type: DataTypes.INTEGER, allowNull: true },
         },
@@ -27,6 +31,6 @@ module.exports = (sequelize, DataTypes) => {
             modelName: "Profile",
             tableName: "profiles",
         }
-    );
+    );    
     return profile;
 };

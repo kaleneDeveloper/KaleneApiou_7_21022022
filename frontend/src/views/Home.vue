@@ -1,28 +1,26 @@
 <template>
     <v-app id="inspire">
         <v-main class="">
-            <div class="d-flex justify-center">
+            <div v-if="renderComponent" class="d-flex justify-center">
                 <div class="text-center">
                     <h2>Welcome {{ username }}</h2>
                     <h3>{{ username }}</h3>
                     <h4>{{ email }}</h4>
-                    <v-img
-                        class="ma-auto"
-                        contain
-                        :lazy-src="imgUrl"
-                        max-height="150"
-                        max-width="150"
-                        :src="imgUrl"
-                    ></v-img>
+                    <v-avatar color="primary" size="40" class="mr-5">
+                        <img v-if="imgUrl" :src="imgUrl" />
+                        <v-icon v-else color="black">
+                            {{ subString }}
+                        </v-icon>
+                    </v-avatar>
                 </div>
             </div>
         </v-main>
     </v-app>
 </template>
-
 <script>
 export default {
     data: () => ({
+        renderComponent: true,
         users: [],
         drawer: null,
     }),
@@ -37,13 +35,30 @@ export default {
                 ? this.users.profile[0].username
                 : "";
         },
+        subString() {
+            return this.users.profile && this.users.profile.length > 0
+                ? this.users.profile[0].username.substring(0, 1).toUpperCase()
+                : "";
+        },
         email() {
             return this.users.profile && this.users.profile.length > 0
                 ? this.users.profile[0].email
                 : "";
         },
     },
-    mounted: function () {
+    methods: {
+        async forceRerender() {
+            await this.$store.dispatch("getUserInfos").then((response) => {
+                this.users = response.data;
+            });
+            this.renderComponent = false;
+            this.$nextTick(() => {
+                this.renderComponent = true;
+            });
+        },
+    },
+    mounted: async function () {
+        await this.forceRerender();
         if (this.$store.state.user.userId === 0) {
             this.$router.push("/login");
             return;
@@ -54,6 +69,4 @@ export default {
     },
 };
 </script>
-<style lang="postcss" scoped>
-
-</style>
+<style lang="postcss" scoped></style>

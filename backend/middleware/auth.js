@@ -4,7 +4,7 @@ const dotenv = require("dotenv").config({ encoding: "latin1" });
 module.exports = (req, res, next) => {
     const authHeader = req.headers["authorization"];
     const token = authHeader && authHeader.split(" ")[1];
-    console.log(token);
+
     if (!token) {
         return res.status(401).json({ message: "Auth failed" });
     }

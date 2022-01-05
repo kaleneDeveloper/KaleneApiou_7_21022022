@@ -57,7 +57,7 @@
                 ></v-app-bar-nav-icon>
                 <v-toolbar-title>Groupamania</v-toolbar-title>
             </v-app-bar>
-            <router-view />
+            <router-view :key="$route.fullPath"/>
         </v-main>
         <!-- DESKTOP -->
         <v-main> </v-main>

@@ -5,8 +5,12 @@ const { v4: uuidv4 } = require("uuid");
 module.exports = (sequelize, DataTypes) => {
     class User extends Model {
         static associate(models) {
-            this.hasMany(models.Post, { foreignKey: "userId" });
-            this.hasMany(models.Comment, { foreignKey: "userId" });
+            this.hasMany(models.Post, {
+                foreignKey: "userId",
+            });
+            this.hasMany(models.Comment, {
+                foreignKey: "userId",
+            });
             this.hasMany(models.Profile, {
                 foreignKey: "userId",
                 as: "profile",
@@ -47,7 +51,7 @@ module.exports = (sequelize, DataTypes) => {
                     min: 3,
                 },
             },
-    
+
             admin: {
                 type: DataTypes.BOOLEAN,
                 allowNull: false,

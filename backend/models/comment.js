@@ -5,16 +5,13 @@ const { v4: uuidv4 } = require("uuid");
 module.exports = (sequelize, DataTypes) => {
     class Comment extends Model {
         static associate(models) {
-            this.belongsTo(models.Post, { foreignKey: "postId", as: "post" });
+            this.belongsTo(models.Post, {
+                foreignKey: "postId",
+                as: "post",
+                onDelete: "CASCADE",
+            });
             this.belongsTo(models.User, { foreignKey: "userId", as: "user" });
             this.belongsTo(models.Post, { foreignKey: "postId" });
-        }
-        toJSON() {
-            const values = Object.assign({}, this.get());
-            delete values.id;
-            delete values.userId;
-            delete values.postId;
-            return values;
         }
     }
     Comment.init(
