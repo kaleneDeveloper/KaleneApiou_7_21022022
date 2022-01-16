@@ -6,7 +6,8 @@
                 <div id="home">
                     <v-list nav dense>
                         <v-list-item-group
-                            active-class="deep-purple--text text--accent-4"
+                            v-model="model"
+                            active-class="lighten-3--text text--accent-4"
                         >
                             <router-link to="/">
                                 <v-list-item>
@@ -41,11 +42,20 @@
                                 </v-list-item>
                             </router-link>
                             <v-list-item
+                                class="d-flex justify-center"
                                 v-if="this.$store.state.user.userId !== 0"
                             >
-                                <button class="logout" @click="logout">
-                                    Deconnexion
-                                </button>
+                                <v-btn
+                                    class="mt-4"
+                                    normal
+                                    @click="logout"
+                                    depressed
+                                    color="blue lighten-3"
+                                >
+                                    <span style="font-size: 14px">
+                                        Deconnexion</span
+                                    >
+                                </v-btn>
                             </v-list-item>
                         </v-list-item-group>
                     </v-list>
@@ -57,7 +67,7 @@
                 ></v-app-bar-nav-icon>
                 <v-toolbar-title>Groupamania</v-toolbar-title>
             </v-app-bar>
-            <router-view :key="$route.fullPath"/>
+            <router-view :key="$route.fullPath" />
         </v-main>
         <!-- DESKTOP -->
         <v-main> </v-main>
@@ -65,19 +75,7 @@
 </template>
 
 <script>
-import colors from 'vuetify/lib/util/colors'
 export default {
-    theme: {
-        themes: {
-            light: {
-                primary: colors.purple,
-                secondary: colors.grey.darken1,
-                accent: colors.indigo.red,
-                error: colors.red.accent3,
-            
-            },
-        },
-    },
     name: "App",
     data: () => ({
         drawer: null,
@@ -95,9 +93,6 @@ export default {
 #nav-bar {
     margin-top: 2rem;
 }
-.v-icon.v-icon.mdi-home {
-    text-decoration: none;
-}
 .v-application a {
     text-decoration: none;
 }
@@ -112,22 +107,7 @@ span {
     color: #2c3e50;
     height: 100vh;
 }
-#nav {
-    padding: 30px;
-    display: grid;
-    justify-content: center;
-}
-#nav a {
-    font-weight: bold;
-    color: #2c3e50;
-}
-#nav a.router-link-exact-active {
-    color: #42b983;
-}
-#home {
-    display: grid;
-}
-.logout {
+/* .logout {
     height: 2rem;
     border-radius: 5px;
     border: none;
@@ -139,6 +119,8 @@ span {
     margin: auto;
     padding: 0 1rem;
     max-width: 100px;
+} */
+.v-btn.v-size--default {
+    font-size: 2rem;
 }
-
 </style>

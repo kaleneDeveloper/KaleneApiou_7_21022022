@@ -19,17 +19,6 @@
 </template>
 
 <script>
-import Vuetify from "vuetify/lib";
-export default new Vuetify({
-    breakpoint: {
-        thresholds: {
-            xs: 340,
-            sm: 540,
-            md: 800,
-            lg: 1280,
-        },
-        scrollBarWidth: 24,
-    },
-});
+
 </script>
 <style scoped></style>

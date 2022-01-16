@@ -1,6 +1,6 @@
 <template>
     <v-app id="inspire">
-        <v-main class="">
+        <v-main class="pl-0">
             <div v-if="renderComponent" class="d-flex justify-center">
                 <div class="text-center">
                     <h2>Welcome {{ username }}</h2>
