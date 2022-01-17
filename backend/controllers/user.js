@@ -1,10 +1,9 @@
-const { User } = require("../models");
-const { Profile } = require("../models");
+const { User } = require("../server/models");
+const { Profile } = require("../server/models");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const fs = require("fs");
-const dotenv = require("dotenv").config({ encoding: "latin1" });
-
+require("dotenv").config({ encoding: "latin1" });
 exports.signup = async (req, res) => {
     const { username, admin, email } = req.body;
     const password = bcrypt.hashSync(req.body.password, 10);

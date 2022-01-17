@@ -9,11 +9,11 @@ module.exports = {
                 type: Sequelize.INTEGER,
             },
             uuid: {
-                type: DataType.UUID,
+                type: Sequelize.UUID,
                 allowNull: false,
             },
-            userId: { type: DataType.INTEGER, allowNull: false },
-            postId: { type: DataType.INTEGER, allowNull: false },
+            userId: { type: Sequelize.INTEGER, allowNull: false },
+            postId: { type: Sequelize.INTEGER, allowNull: false },
             content: {
                 type: Sequelize.STRING,
             },

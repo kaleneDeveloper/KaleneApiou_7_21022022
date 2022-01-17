@@ -1,4 +1,4 @@
-const { User, Post, Comment, Profile } = require("../models");
+const { User, Post, Comment, Profile } = require("../server/models");
 
 exports.findAll = async (req, res) => {
     try {

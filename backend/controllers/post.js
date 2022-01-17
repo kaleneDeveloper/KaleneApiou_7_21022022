@@ -1,7 +1,7 @@
-const { User } = require("../models");
-const { Post } = require("../models");
-const { Profile } = require("../models");
-const { Comment } = require("../models");
+const { User } = require("../server/models");
+const { Post } = require("../server/models");
+const { Profile } = require("../server/models");
+const { Comment } = require("../server/models");
 
 exports.findAll = async (req, res) => {
     try {
