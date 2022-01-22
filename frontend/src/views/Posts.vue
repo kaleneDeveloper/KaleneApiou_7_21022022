@@ -274,11 +274,15 @@ export default {
                 : "";
         },
     },
-    mounted() {
-        this.$store.dispatch("getPosts").then((response) => {
+    mounted: async function () {
+        if (this.$store.state.user.userId === 0) {
+            this.$router.push("/login");
+            return;
+        }
+        await this.$store.dispatch("getPosts").then((response) => {
             this.posts = response.data;
         });
-        this.$store.dispatch("getUserInfos").then((response) => {
+        await this.$store.dispatch("getUserInfos").then((response) => {
             this.userId = response.data.id;
             this.admin = response.data.admin;
             this.userInfo = response.data;
@@ -304,6 +308,6 @@ export default {
     z-index: 100;
 }
 .sendTweet {
-    margin: 24px;
+    padding: 24px;
 }
 </style>

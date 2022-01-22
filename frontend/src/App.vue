@@ -6,7 +6,6 @@
                 <div id="home">
                     <v-list nav dense>
                         <v-list-item-group
-                            v-model="model"
                             active-class="lighten-3--text text--accent-4"
                         >
                             <router-link to="/">

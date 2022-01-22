@@ -1,7 +1,7 @@
 <template>
-    <v-app id="inspire">
+    <v-app v-if="renderComponent" id="inspire">
         <v-main class="pl-0">
-            <div v-if="renderComponent" class="d-flex justify-center">
+            <div class="d-flex justify-center">
                 <div class="text-center">
                     <h2>Welcome {{ username }}</h2>
                     <h3>{{ username }}</h3>
@@ -23,6 +23,7 @@ export default {
         renderComponent: true,
         users: [],
         drawer: null,
+        posts: [],
     }),
     computed: {
         imgUrl() {
@@ -58,14 +59,14 @@ export default {
         },
     },
     mounted: async function () {
-        await this.forceRerender();
         if (this.$store.state.user.userId === 0) {
             this.$router.push("/login");
             return;
         }
-        this.$store.dispatch("getUserInfos").then((response) => {
+        await this.$store.dispatch("getUserInfos").then((response) => {
             this.users = response.data;
         });
+        this.forceRerender();
     },
 };
 </script>

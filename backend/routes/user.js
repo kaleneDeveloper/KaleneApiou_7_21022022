@@ -6,12 +6,12 @@ const auth = require("../middleware/auth");
 
 router.post("/signup", userCtrl.signup);
 router.post("/login", userCtrl.login);
-router.get("/id/:uuid", userCtrl.findOne);
+router.get("/id/:uuid", auth, userCtrl.findOne);
 
-router.get("/", userCtrl.findAll);
+router.get("/", auth, userCtrl.findAll);
 
 router.get("/token", auth, userCtrl.getToken);
 
-router.put("/profile/:uuid", multer, userCtrl.updateProfile);
+router.put("/profile/:uuid", auth, multer, userCtrl.updateProfile);
 
 module.exports = router;
