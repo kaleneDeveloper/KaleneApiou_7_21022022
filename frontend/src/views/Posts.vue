@@ -232,6 +232,7 @@ export default {
         },
         async addPost() {
             if (this.validatePost() != false) {
+                console.log(this.post);
                 await this.$store.dispatch("addPost", {
                     userUuid: this.userUuid,
                     content: this.post,
@@ -245,15 +246,23 @@ export default {
             await this.$store.dispatch("deletePost", uuid);
             this.forceRerender();
         },
+        async modifyPost(uuid) {
+            await this.$store.dispatch("modifyPost", uuid, {
+                userUuid: this.userUuid,
+                content: this.post,
+                title: this.userInfo.username,
+            });
+            this.forceRerender();
+        },
         validate(index) {
-            if (this.comment[index]) {
+            if (this.comment[index] || this.comment[index] > 0) {
                 return true;
             } else {
                 return false;
             }
         },
         validatePost() {
-            if (this.post || this.post.length > 0) {
+            if (this.post.length > 0) {
                 return true;
             } else {
                 return false;
@@ -279,9 +288,6 @@ export default {
             this.$router.push("/login");
             return;
         }
-        await this.$store.dispatch("getPosts").then((response) => {
-            this.posts = response.data;
-        });
         await this.$store.dispatch("getUserInfos").then((response) => {
             this.userId = response.data.id;
             this.admin = response.data.admin;

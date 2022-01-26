@@ -1,5 +1,4 @@
-const { User } = require("../server/models");
-const { Profile } = require("../server/models");
+const { User, Post, Comment, Profile } = require("../server/models");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const fs = require("fs");
@@ -66,7 +65,14 @@ exports.login = async (req, res) => {
 exports.findAll = async (req, res) => {
     try {
         const users = await User.findAll({
-            include: ["profile"],
+            include: [
+                "profile",
+                {
+                    model: Post,
+                    as: "posts",
+                    include: ["comments"],
+                },
+            ],
         });
         return res.send(users);
     } catch (error) {
@@ -77,7 +83,14 @@ exports.findOne = async (req, res) => {
     try {
         const user = await User.findOne({
             where: { uuid: req.params.uuid },
-            include: ["profile"],
+            include: [
+                "profile",
+                {
+                    model: Post,
+                    as: "posts",
+                    include: ["comments"],
+                },
+            ],
         });
         return res.send(user);
     } catch (error) {
@@ -85,18 +98,16 @@ exports.findOne = async (req, res) => {
     }
 };
 exports.updateProfile = async (req, res) => {
-    if (req.file) {
+    if (req.files) {
         const { username, lastName, age, email, password } = req.body;
         try {
-            const user = await User.findOne({
-                where: { uuid: req.params.uuid },
-                include: ["profile"],
+            const profile = await Profile.findAll({
+                where: { userUuid: req.params.uuid },
             });
-            const filename = user.profile[0].imageUrl.split(
-                "/images/uploads/profile/"
+            const filename = profile[0].imageUrl.split(
+                "/images/uploads/profiles/"
             )[1];
-            console.log(filename + "test");
-            fs.unlink(`./images/uploads/profile/${filename}`, () => {});
+            fs.unlink(`./../images/uploads/profiles/${filename}`, () => {});
             const profilObject = {
                 username,
                 lastName,
@@ -105,7 +116,7 @@ exports.updateProfile = async (req, res) => {
                 password,
                 imageUrl: `${req.protocol}://${req.get(
                     "host"
-                )}/images/uploads/profile/${req.file.filename}`,
+                )}/images/uploads/profiles/${req.files.profile[0].filename}`,
             };
             await Profile.update(profilObject, {
                 where: { userUuid: req.params.uuid },

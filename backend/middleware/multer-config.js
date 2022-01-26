@@ -11,15 +11,21 @@ const maxSize = 8 * 1024 * 1024;
 const limits = {
     fileSize: maxSize,
 };
+const maxCount = 5;
+const count = {
+    files: maxCount,
+};
 const types = Object.keys(MIME_TYPES);
 const storage = multer.diskStorage({
     destination: (req, file, callback) => {
         if (types.includes(file.mimetype)) {
-            let pathUrl = req.originalUrl.split("/");
-            const findOne = pathUrl.find(
-                (path) => path === "posts" || path === "profile"
-            );
-            callback(null, "images/uploads/" + findOne);
+            if (file.fieldname === "profile") {
+                callback(null, "../images/uploads/profiles/");
+            } else if (file.fieldname === "posts") {
+                callback(null, "../images/uploads/posts/");
+            } else if (file.fieldname === "videos") {
+                callback(null, "../images/uploads/videos/");
+            }
         } else {
             return callback(new Error("Invalid file type"));
         }
@@ -32,4 +38,17 @@ const storage = multer.diskStorage({
     },
 });
 
-module.exports = multer({ limits, storage }).single("file");
+module.exports = multer({ limits, storage }).fields([
+    {
+        name: "profile",
+        maxCount: 1,
+    },
+    {
+        name: "posts",
+        maxCount: 1,
+    },
+    {
+        name: "videos",
+        maxCount: 1,
+    },
+]);

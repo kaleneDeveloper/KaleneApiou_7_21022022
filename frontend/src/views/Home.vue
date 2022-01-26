@@ -1,5 +1,5 @@
 <template>
-    <v-app v-if="renderComponent" id="inspire">
+    <v-app v-if="forceRerender" id="inspire">
         <v-main class="pl-0">
             <div class="d-flex justify-center">
                 <div class="text-center">
@@ -21,6 +21,7 @@
 export default {
     data: () => ({
         renderComponent: true,
+        componentKey: 0,
         users: [],
         drawer: null,
         posts: [],
@@ -48,25 +49,24 @@ export default {
         },
     },
     methods: {
-        async forceRerender() {
-            await this.$store.dispatch("getUserInfos").then((response) => {
-                this.users = response.data;
-            });
+        forceRerender() {
             this.renderComponent = false;
             this.$nextTick(() => {
                 this.renderComponent = true;
             });
         },
     },
-    mounted: async function () {
+    beforeMount() {
+        this.$store.dispatch("getUserInfos").then((response) => {
+            this.users = response.data;
+        });
+        this.forceRerender();
+    },
+    mounted() {
         if (this.$store.state.user.userId === 0) {
             this.$router.push("/login");
             return;
         }
-        await this.$store.dispatch("getUserInfos").then((response) => {
-            this.users = response.data;
-        });
-        this.forceRerender();
     },
 };
 </script>

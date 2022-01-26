@@ -12,10 +12,9 @@ exports.findAll = async (req, res) => {
 };
 exports.findOne = async (req, res) => {
     try {
-        const user = await User.findOne({
+        const comments = await Comment.findAll({
             where: { uuid: req.params.uuid },
         });
-        const comments = await Comment.findAll({ where: { userId: user.id } });
         return res.send(comments);
     } catch (error) {
         res.status(500).send(error);
@@ -47,6 +46,21 @@ exports.commentDelete = async (req, res) => {
             where: { uuid: req.params.uuid },
         });
         return res.json(comment);
+    } catch (error) {
+        res.status(500).json(error);
+    }
+};
+exports.commentUpdate = async (req, res) => {
+    try {
+        const { content, imageUrl } = req.body;
+        const commentObject = {
+            content,
+            imageUrl,
+        };
+        await Comment.update(commentObject, {
+            where: { uuid: req.params.uuid },
+        });
+        return res.json(commentObject);
     } catch (error) {
         res.status(500).json(error);
     }

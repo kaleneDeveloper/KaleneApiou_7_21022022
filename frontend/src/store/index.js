@@ -12,28 +12,21 @@ const instance = axios.create({
 
 let user = localStorage.getItem("user");
 let userInfos = localStorage.getItem("userInfos");
-if (!user) {
-    user = {
-        userId: 0,
-        uuid: "",
-    };
-} else {
+if (user) {
     user = JSON.parse(user);
     userInfos = JSON.parse(userInfos);
-    // try {
-    //     user = JSON.parse(user);
-    //     userInfos = JSON.parse(userInfos);
-    // } catch (error) {
-    //     user = {
-    //         userId: 0,
-    //         uuid: "",
-    //     };
-    // }
+    instance.defaults.headers.common["Authorization"] = "Bearer " + user.token;
+} else {
+    user = {
+        userId: 0,
+        token: "",
+    };
 }
 const store = new Vuex.Store({
     state: {
         status: "",
         user: user,
+        token: "",
         userToken: userInfos,
     },
     mutations: {
@@ -41,15 +34,8 @@ const store = new Vuex.Store({
             state.status = status;
         },
         logUser(state, user) {
-            instance.interceptors.request.use((config) => {
-                if (user.token) {
-                    config.headers["Authorization"] = "Bearer " + user.token;
-                }
-                return config;
-            });
             localStorage.setItem("user", JSON.stringify(user));
             state.user = user;
-            this.dispatch("getUserToken");
         },
         userToken(state, userTokenInfo) {
             localStorage.setItem("userInfos", JSON.stringify(userTokenInfo));
@@ -72,7 +58,7 @@ const store = new Vuex.Store({
                     });
             });
         },
-        login: ({ commit }, userInfo) => {
+        login({ commit }, userInfo) {
             commit("setStatus", "loading");
             return new Promise((resolve, reject) => {
                 instance
@@ -92,18 +78,18 @@ const store = new Vuex.Store({
             return new Promise((state) => {
                 commit("logUser", {
                     userId: 0,
-                    uuid: "",
+                    token: "",
                 });
                 localStorage.removeItem("user");
                 localStorage.removeItem("userInfos");
                 state;
             });
         },
-        getUserToken({ commit }) {
-            const token = store.state.user.token;
-            instance
+        async getUserToken({ commit }) {
+            const token = this.state.user.token;
+            await instance
                 .get("/api/users/token", {
-                    headers: { Authorization: `Bearer ${token}` },
+                    headers: { Authorization: "Bearer " + token },
                 })
                 .then((response) => {
                     commit("userToken", response.data);
@@ -113,13 +99,13 @@ const store = new Vuex.Store({
                 });
         },
         async getUserInfos() {
-            const uuid = store.state.userToken.uuid;
-            const token = store.state.user.token;
             await this.dispatch("getUserToken");
+            const token = this.state.user.token;
+            const uuid = store.state.userToken.uuid;
             return new Promise((resolve, reject) => {
                 instance
                     .get("/api/users/id/" + uuid, {
-                        headers: { Authorization: `Bearer ${token}` },
+                        headers: { Authorization: "Bearer " + token },
                     })
                     .then((response) => {
                         resolve(response);
@@ -131,12 +117,9 @@ const store = new Vuex.Store({
         },
         getUserPosts() {
             const uuid = store.state.userToken.uuid;
-            const token = store.state.user.token;
             return new Promise((resolve, reject) => {
                 instance
-                    .get("/api/posts/user/" + uuid, {
-                        headers: { Authorization: `Bearer ${token}` },
-                    })
+                    .get("/api/posts/user/" + uuid)
                     .then((response) => {
                         resolve(response);
                     })
@@ -146,12 +129,9 @@ const store = new Vuex.Store({
             });
         },
         getPosts() {
-            const token = store.state.user.token;
             return new Promise((resolve, reject) => {
                 instance
-                    .get("/api/posts", {
-                        headers: { Authorization: `Bearer ${token}` },
-                    })
+                    .get("/api/posts")
                     .then((response) => {
                         resolve(response);
                     })
@@ -160,14 +140,11 @@ const store = new Vuex.Store({
                     });
             });
         },
-        modifyPost({ commit }, uuid) {
-            const token = store.state.user.token;
+        modifyPost({ commit }, uuid, comment) {
             return new Promise((resolve, reject) => {
                 commit;
                 instance
-                    .put("/api/posts/" + uuid, {
-                        headers: { Authorization: `Bearer ${token}` },
-                    })
+                    .put("/api/posts/" + uuid, comment)
                     .then((response) => {
                         resolve(response);
                     })
@@ -177,13 +154,10 @@ const store = new Vuex.Store({
             });
         },
         deleteComment({ commit }, uuid) {
-            const token = store.state.user.token;
             return new Promise((resolve, reject) => {
                 commit;
                 instance
-                    .delete("/api/comments/" + uuid, {
-                        headers: { Authorization: `Bearer ${token}` },
-                    })
+                    .delete("/api/comments/" + uuid)
                     .then((response) => {
                         resolve(response);
                     })
@@ -193,13 +167,10 @@ const store = new Vuex.Store({
             });
         },
         addComment({ commit }, comment) {
-            const token = store.state.user.token;
             return new Promise((resolve, reject) => {
                 commit;
                 instance
-                    .post("/api/comments", comment, {
-                        headers: { Authorization: `Bearer ${token}` },
-                    })
+                    .post("/api/comments", comment)
                     .then((response) => {
                         resolve(response);
                     })
@@ -209,13 +180,10 @@ const store = new Vuex.Store({
             });
         },
         addPost: ({ commit }, post) => {
-            const token = store.state.user.token;
             return new Promise((resolve, reject) => {
                 commit;
                 instance
-                    .post("/api/posts", post, {
-                        headers: { Authorization: `Bearer ${token}` },
-                    })
+                    .post("/api/posts", post)
                     .then((response) => {
                         resolve(response);
                     })
@@ -225,13 +193,10 @@ const store = new Vuex.Store({
             });
         },
         deletePost: ({ commit }, uuid) => {
-            const token = store.state.user.token;
             return new Promise((resolve, reject) => {
                 commit;
                 instance
-                    .delete("/api/posts/" + uuid, {
-                        headers: { Authorization: `Bearer ${token}` },
-                    })
+                    .delete("/api/posts/" + uuid)
                     .then((response) => {
                         resolve(response);
                     })

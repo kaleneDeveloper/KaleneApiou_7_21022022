@@ -5,15 +5,16 @@ const { v4: uuidv4 } = require("uuid");
 module.exports = (sequelize, DataTypes) => {
     class User extends Model {
         static associate(models) {
-            this.hasMany(models.Post, {
-                foreignKey: "userId",
-            });
             this.hasMany(models.Comment, {
                 foreignKey: "userId",
             });
             this.hasMany(models.Profile, {
                 foreignKey: "userId",
                 as: "profile",
+            });
+            this.hasMany(models.Post, {
+                foreignKey: "userId",
+                as: "posts",
             });
         }
     }
@@ -36,12 +37,12 @@ module.exports = (sequelize, DataTypes) => {
             email: {
                 type: DataTypes.STRING,
                 allowNull: false,
-                unique: 'email',
+                unique: "email",
                 validate: {
                     notNull: { msg: "Email is required" },
                     notEmpty: { msg: "Email is required" },
                     isEmail: true,
-                }, 
+                },
             },
             password: {
                 type: DataTypes.STRING,

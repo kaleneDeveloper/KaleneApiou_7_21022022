@@ -1,7 +1,5 @@
-const { User } = require("../server/models");
-const { Post } = require("../server/models");
-const { Profile } = require("../server/models");
-const { Comment } = require("../server/models");
+const { User, Post, Comment, Profile } = require("../server/models");
+const fs = require("fs");
 
 exports.findAll = async (req, res) => {
     try {
@@ -42,11 +40,8 @@ exports.findAll = async (req, res) => {
 };
 exports.findOne = async (req, res) => {
     try {
-        const user = await User.findOne({
-            where: { uuid: req.params.uuid },
-        });
         const post = await Post.findAll({
-            where: { userId: user.id },
+            where: { uuid: req.params.uuid },
             include: ["user"],
         });
         return res.send(post);
@@ -55,7 +50,7 @@ exports.findOne = async (req, res) => {
     }
 };
 exports.postCreate = async (req, res) => {
-    if (req.file) {
+    if (req.files) {
         const { title, content, userUuid } = req.body;
         try {
             const user = await User.findOne({
@@ -67,7 +62,7 @@ exports.postCreate = async (req, res) => {
                 content,
                 imageUrl: `${req.protocol}://${req.get(
                     "host"
-                )}/images/uploads/posts/${req.file.filename}`,
+                )}/images/uploads/posts/${req.files.posts[0].filename}`,
             });
             return res.send(post);
         } catch (error) {
@@ -91,40 +86,48 @@ exports.postCreate = async (req, res) => {
         }
     }
 };
-exports.modifyPost = async (req, res) => {
-    if (req.file) {
+exports.updatePost = async (req, res) => {
+    if (req.files.posts) {
         const { title, content } = req.body;
         try {
-            const post = await Post.findOne({
+            const post = await Post.findAll({
                 where: { uuid: req.params.uuid },
             });
-            const filename = post.imageUrl.split("/images/uploads/posts/")[1];
-            fs.unlink(`./images/uploads/profile/${filename}`, () => {});
+            // if (post[0].userId !== req.auth.userId) {
+            //     return res
+            //         .status(401)
+            //         .json({ error: "Vous n'avez pas les droits" });
+            // }
+            const filename = post[0].imageUrl.split(
+                "/images/uploads/posts/"
+            )[1];
+            fs.unlink(`./../images/uploads/posts/${filename}`, () => {});
             const postObject = {
                 content,
                 title,
                 imageUrl: `${req.protocol}://${req.get(
                     "host"
-                )}/images/uploads/posts/${req.file.filename}`,
+                )}/images/uploads/posts/${req.files.posts[0].filename}`,
             };
             await Post.update(postObject, {
                 where: { uuid: req.params.uuid },
             });
-            return res.send(post);
+            return res.send(postObject);
         } catch (error) {
-            res.status(500).send(error);
+            res.status(500).send({ error });
         }
     } else {
         try {
             const { title, content, imageUrl } = req.body;
-            const profilObject = {
-                title,
+            const postObject = {
                 content,
+                title,
                 imageUrl,
             };
-            await Profile.update(profilObject, {
-                where: { Uuid: req.params.uuid },
+            await Post.update(postObject, {
+                where: { uuid: req.params.uuid },
             });
+            return res.send(postObject);
         } catch (error) {
             res.status(500).send(error);
         }
@@ -134,9 +137,23 @@ exports.deletePost = async (req, res) => {
     try {
         const post = await Post.findOne({
             where: { uuid: req.params.uuid },
+            include: ["comments"],
         });
-        // const filename = post.imageUrl.split("/images/uploads/posts/")[1];
-        // fs.unlink(`./images/uploads/posts/${filename}`, () => {});
+
+        // if (post.userId !== req.auth.userId) {
+        //     return res
+        //         .status(401)
+        //         .json({ error: "Vous n'avez pas les droits" });
+        // }
+        if (post.imageUrl !== null) {
+            const filename = post.imageUrl.split("/images/uploads/posts/")[1];
+            fs.unlink(`./../images/uploads/posts/${filename}`, () => {});
+        }
+        for (let index = 0; index < post.comments.length; index++) {
+            let filename = post.comments[index].content;
+            console.log(filename);
+            // fs.unlink(`./../images/uploads/posts/${filename}`, () => {});
+        }
         await Post.destroy({
             where: { uuid: req.params.uuid },
         });

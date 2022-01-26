@@ -125,17 +125,21 @@ export default {
             this.mode = "login";
         },
         login: function () {
-            this.$store
-                .dispatch("login", {
-                    email: this.email,
-                    password: this.password,
-                })
-                .then(() => {
-                    this.$router.push("/");
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
+            if (this.email != "" && this.password != "") {
+                this.$store
+                    .dispatch("login", {
+                        email: this.email,
+                        password: this.password,
+                    })
+                    .then(() => {
+                        this.$router.push("/");
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
+            } else {
+                return false;
+            }
         },
         createAccount: function () {
             this.$store
