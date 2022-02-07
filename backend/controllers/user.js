@@ -98,7 +98,8 @@ exports.findOne = async (req, res) => {
     }
 };
 exports.updateProfile = async (req, res) => {
-    if (req.files) {
+    if (req.files.profile !== undefined) {
+        console.log(req.files);
         const { username, lastName, age, email, password } = req.body;
         try {
             const profile = await Profile.findAll({

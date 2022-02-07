@@ -87,9 +87,10 @@ exports.postCreate = async (req, res) => {
     }
 };
 exports.updatePost = async (req, res) => {
-    if (req.files.posts) {
+    if (req.files) {
         const { title, content } = req.body;
         try {
+            console.log(req.files);
             const post = await Post.findAll({
                 where: { uuid: req.params.uuid },
             });
@@ -98,10 +99,13 @@ exports.updatePost = async (req, res) => {
             //         .status(401)
             //         .json({ error: "Vous n'avez pas les droits" });
             // }
-            const filename = post[0].imageUrl.split(
-                "/images/uploads/posts/"
-            )[1];
-            fs.unlink(`./../images/uploads/posts/${filename}`, () => {});
+            if (post[0].imageUrl !== null) {
+                const filename = post[0].imageUrl.split(
+                    "/images/uploads/posts/"
+                )[1];
+                fs.unlink(`./../images/uploads/posts/${filename}`, () => {});
+
+            }
             const postObject = {
                 content,
                 title,

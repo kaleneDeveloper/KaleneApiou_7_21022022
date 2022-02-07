@@ -11,10 +11,10 @@ const http = axios.create({
 http.defaults.headers.common["Authorization"] =
     "Bearer " + JSON.parse(user).token;
 export default {
-    deleteComment(id) {
-        return http.delete("/api/comments/" + id);
+    getAll() {
+        return http.get("/api/posts");
     },
-    addComment(comment) {
-        return http.post("/api/comments", comment);
-    }
+    getPostUser(id) {
+        return http.get("/api/users/id/" + id);
+    },
 };

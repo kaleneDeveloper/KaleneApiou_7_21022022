@@ -140,11 +140,11 @@ const store = new Vuex.Store({
                     });
             });
         },
-        modifyPost({ commit }, uuid, comment) {
+        modifyPost({ commit }, content) {
             return new Promise((resolve, reject) => {
                 commit;
                 instance
-                    .put("/api/posts/" + uuid, comment)
+                    .put("/api/posts/id/" + content.uuid, content)
                     .then((response) => {
                         resolve(response);
                     })
@@ -153,11 +153,12 @@ const store = new Vuex.Store({
                     });
             });
         },
-        deleteComment({ commit }, uuid) {
+        modifyComment({ commit }, content) {
+            console.log(content);
             return new Promise((resolve, reject) => {
                 commit;
                 instance
-                    .delete("/api/comments/" + uuid)
+                    .put("/api/comments/" + content.uuid, content)
                     .then((response) => {
                         resolve(response);
                     })
@@ -166,19 +167,7 @@ const store = new Vuex.Store({
                     });
             });
         },
-        addComment({ commit }, comment) {
-            return new Promise((resolve, reject) => {
-                commit;
-                instance
-                    .post("/api/comments", comment)
-                    .then((response) => {
-                        resolve(response);
-                    })
-                    .catch((error) => {
-                        reject(error);
-                    });
-            });
-        },
+ 
         addPost: ({ commit }, post) => {
             return new Promise((resolve, reject) => {
                 commit;

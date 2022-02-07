@@ -1,6 +1,7 @@
 <template>
     <v-app id="inspire">
         <v-main class="pl-0">
+            <!-- ADD POST -->
             <v-container class="sendTweet">
                 <v-row class="d-flex align-center">
                     <v-avatar
@@ -13,14 +14,19 @@
                             {{ subString }}
                         </v-icon>
                     </v-avatar>
-                    <v-text-field
+                    <v-textarea
                         v-if="userId !== 0 || admin === true"
                         v-model="post"
+                        color="teal"
                         label="Post"
                         outlined
                         v-on:keyup.enter="addPost(userInfo.uuid)"
                         required
-                    ></v-text-field>
+                    >
+                        <template v-slot:label>
+                            <div>Post</div>
+                        </template>
+                    </v-textarea>
                 </v-row>
                 <v-btn
                     v-if="this.userInfo.id === userId || admin === true"
@@ -38,8 +44,10 @@
                     <v-icon dark> mdi-plus </v-icon>
                 </v-btn>
             </v-container>
-            <v-container v-for="post in posts" v-bind:key="post.id">
-                <v-col cols="12" sm="12" md="12" lg="12" xl="12">
+            <!-- POSTS AND COMMENTS -->
+            <v-container v-for="(post, index) in posts" v-bind:key="post.id">
+                <!-- POSTS -->
+                <v-col class="mb-10">
                     <v-card v-if="renderComponent">
                         <v-card-title>
                             <h1>{{ post.title }}</h1>
@@ -49,8 +57,8 @@
                                 {{ post.content }}
                             </p>
                         </v-card-text>
-                        <div class="d-flex align-center profile pa-1">
-                            <v-avatar color="primary" size="46" class="mr-5">
+                        <v-row class="justify-space-between">
+                            <!-- <v-avatar color="primary" size="46" class="mr-5">
                                 <img
                                     v-if="post.user.profile[0].imageUrl"
                                     :src="post.user.profile[0].imageUrl"
@@ -62,41 +70,271 @@
                                             .toUpperCase()
                                     }}
                                 </v-icon>
-                            </v-avatar>
-                            <p class="mt-auto username subtitle-2 font-italic">
-                                @{{ post.user.username }}
-                            </p>
-                            <v-btn
-                                v-if="post.user.id === userId || admin === true"
-                                id="modify-post"
-                                v-bind:uuid="post.uuid"
-                                class="ml-auto"
-                                color="primary"
-                                fab
-                                x-small
-                                dark
-                            >
-                                <v-icon>mdi-pencil</v-icon>
-                            </v-btn>
-                            <v-btn
-                                class="ml-1"
-                                id="delete-post"
-                                @click="deletePost(post.uuid)"
-                                v-if="post.user.id === userId || admin === true"
-                                color="red"
-                                fab
-                                x-small
-                                dark
-                                v-bind:uuid="post.uuid"
-                            >
-                                <v-icon>mdi-minus</v-icon>
-                            </v-btn>
-                        </div>
+                            </v-avatar> -->
+                            <div class="d-flex align-center">
+                                <template>
+                                    <v-container>
+                                        <div>
+                                            <v-menu
+                                                bottom
+                                                min-width="200px"
+                                                rounded
+                                                offset-y
+                                            >
+                                                <template
+                                                    v-slot:activator="{ on }"
+                                                >
+                                                    <v-btn
+                                                        icon
+                                                        x-large
+                                                        v-on="on"
+                                                    >
+                                                        <v-avatar
+                                                            color="primary"
+                                                            size="46"
+                                                        >
+                                                            <img
+                                                                v-if="
+                                                                    post.user
+                                                                        .profile[0]
+                                                                        .imageUrl
+                                                                "
+                                                                :src="
+                                                                    post.user
+                                                                        .profile[0]
+                                                                        .imageUrl
+                                                                "
+                                                            />
+                                                            <v-icon
+                                                                v-else
+                                                                color="black"
+                                                            >
+                                                                {{
+                                                                    post.user.profile[0].username
+                                                                        .substring(
+                                                                            0,
+                                                                            1
+                                                                        )
+                                                                        .toUpperCase()
+                                                                }}
+                                                            </v-icon>
+                                                        </v-avatar>
+                                                    </v-btn>
+                                                </template>
+                                                <v-card>
+                                                    <v-list-item-content
+                                                        class="justify-center"
+                                                    >
+                                                        <div
+                                                            class="mx-auto text-center"
+                                                        >
+                                                            <v-avatar
+                                                                color="primary"
+                                                                size="46"
+                                                            >
+                                                                <img
+                                                                    v-if="
+                                                                        post
+                                                                            .user
+                                                                            .profile[0]
+                                                                            .imageUrl
+                                                                    "
+                                                                    :src="
+                                                                        post
+                                                                            .user
+                                                                            .profile[0]
+                                                                            .imageUrl
+                                                                    "
+                                                                />
+                                                                <v-icon
+                                                                    v-else
+                                                                    color="black"
+                                                                >
+                                                                    {{
+                                                                        post.user.profile[0].username
+                                                                            .substring(
+                                                                                0,
+                                                                                1
+                                                                            )
+                                                                            .toUpperCase()
+                                                                    }}
+                                                                </v-icon>
+                                                            </v-avatar>
+                                                            <h3>
+                                                                {{
+                                                                    post.user
+                                                                        .profile[0]
+                                                                        .username
+                                                                }}
+                                                                {{
+                                                                    post.user
+                                                                        .profile[0]
+                                                                        .username
+                                                                }}
+                                                            </h3>
+                                                            <p
+                                                                class="text-caption mt-1"
+                                                            >
+                                                                {{
+                                                                    profile.email
+                                                                }}
+                                                            </p>
+                                                            <v-divider
+                                                                class="my-3"
+                                                            ></v-divider>
+                                                            <v-btn
+                                                                depressed
+                                                                rounded
+                                                                text
+                                                                @click="
+                                                                    profilePath(
+                                                                        post
+                                                                            .user
+                                                                            .profile[0]
+                                                                            .userUuid
+                                                                    )
+                                                                "
+                                                            >
+                                                                Voir le profile
+                                                            </v-btn>
+                                                            <v-divider
+                                                                class="my-3"
+                                                            ></v-divider>
+                                                            <div
+                                                                v-if="
+                                                                    post.user
+                                                                        .id ===
+                                                                        userId ||
+                                                                    admin ===
+                                                                        true
+                                                                "
+                                                            >
+                                                                <v-btn
+                                                                    depressed
+                                                                    rounded
+                                                                    text
+                                                                >
+                                                                    Edit Account
+                                                                </v-btn>
+                                                                <v-divider
+                                                                    class="my-3"
+                                                                ></v-divider>
+                                                                <v-btn
+                                                                    depressed
+                                                                    rounded
+                                                                    text
+                                                                >
+                                                                    Disconnect
+                                                                </v-btn>
+                                                            </div>
+                                                        </div>
+                                                    </v-list-item-content>
+                                                </v-card>
+                                            </v-menu>
+                                        </div>
+                                    </v-container>
+                                </template>
+
+                                <span
+                                    class="m-auto username subtitle-2 font-italic"
+                                >
+                                    @{{ post.user.username }}
+                                </span>
+                            </div>
+                            <div class="d-flex align-center mr-5">
+                                <v-dialog
+                                    v-model="dialog[index]"
+                                    persistent
+                                    max-width="600px"
+                                >
+                                    <template v-slot:activator="{ on, attrs }">
+                                        <v-btn
+                                            v-if="
+                                                post.user.id === userId ||
+                                                admin === true
+                                            "
+                                            id="modify-post"
+                                            :v-bind="attrs"
+                                            v-on="on"
+                                            class="ml-auto"
+                                            color="primary"
+                                            fab
+                                            x-small
+                                            dark
+                                        >
+                                            <v-icon>mdi-pencil</v-icon>
+                                        </v-btn>
+                                    </template>
+                                    <v-card>
+                                        <v-card-title>
+                                            <span class="text-h5"
+                                                >Post utilisateur</span
+                                            >
+                                        </v-card-title>
+                                        <v-card-text>
+                                            <v-container>
+                                                <v-row>
+                                                    <v-col cols="12">
+                                                        <v-textarea
+                                                            color="teal"
+                                                            label="Post"
+                                                            v-model="postUpdate"
+                                                        >
+                                                            <template
+                                                                v-slot:label
+                                                            >
+                                                                <div>post</div>
+                                                            </template>
+                                                        </v-textarea>
+                                                    </v-col>
+                                                </v-row>
+                                            </v-container>
+                                        </v-card-text>
+                                        <v-card-actions>
+                                            <v-spacer></v-spacer>
+                                            <v-btn
+                                                color="blue darken-1"
+                                                text
+                                                @click="dialog = [false[index]]"
+                                            >
+                                                Close
+                                            </v-btn>
+                                            <v-btn
+                                                color="blue darken-1"
+                                                text
+                                                @click="
+                                                    modifyPost(post.uuid, index)
+                                                "
+                                            >
+                                                Save
+                                            </v-btn>
+                                        </v-card-actions>
+                                    </v-card>
+                                </v-dialog>
+                                <v-btn
+                                    class="ml-1"
+                                    id="delete-post"
+                                    @click="deletePost(post.uuid)"
+                                    v-if="
+                                        post.user.id === userId ||
+                                        admin === true
+                                    "
+                                    color="red"
+                                    fab
+                                    x-small
+                                    dark
+                                    v-bind:uuid="post.uuid"
+                                >
+                                    <v-icon>mdi-minus</v-icon>
+                                </v-btn>
+                            </div>
+                        </v-row>
                     </v-card>
                 </v-col>
+                <!-- COMMENTS -->
                 <v-col
                     id="comment"
-                    v-for="comment in post.comments"
+                    v-for="(comment, index) in post.comments"
                     v-bind:key="comment.id"
                     cols="12"
                     sm="12"
@@ -127,18 +365,80 @@
                             <p class="mt-auto username subtitle-2 font-italic">
                                 @{{ comment.user.profile[0].username }}
                             </p>
-                            <v-btn
-                                v-if="
-                                    comment.user.id === userId || admin === true
-                                "
-                                class="ml-auto"
-                                color="primary"
-                                fab
-                                x-small
-                                dark
+                            <v-dialog
+                                v-model="dialogComment[index]"
+                                persistent
+                                max-width="600px"
                             >
-                                <v-icon>mdi-pencil</v-icon>
-                            </v-btn>
+                                <template v-slot:activator="{ on, attrs }">
+                                    <v-btn
+                                        v-if="
+                                            post.user.id === userId ||
+                                            admin === true
+                                        "
+                                        id="modify-comment"
+                                        v-bind="attrs"
+                                        v-on="on"
+                                        class="ml-auto"
+                                        color="primary"
+                                        fab
+                                        x-small
+                                        dark
+                                    >
+                                        <v-icon>mdi-pencil</v-icon>
+                                    </v-btn>
+                                </template>
+                                <v-card>
+                                    <v-card-title>
+                                        <span class="text-h5"
+                                            >Commentaire utilisateur</span
+                                        >
+                                    </v-card-title>
+                                    <v-card-text>
+                                        <v-container>
+                                            <v-row>
+                                                <v-col cols="12">
+                                                    <v-textarea
+                                                        color="teal"
+                                                        label="Commentaire"
+                                                        v-model="commentUpdate"
+                                                    >
+                                                        <template v-slot:label>
+                                                            <div>
+                                                                commentaire
+                                                            </div>
+                                                        </template>
+                                                    </v-textarea>
+                                                </v-col>
+                                            </v-row>
+                                        </v-container>
+                                    </v-card-text>
+                                    <v-card-actions>
+                                        <v-spacer></v-spacer>
+                                        <v-btn
+                                            color="blue darken-1"
+                                            text
+                                            @click="
+                                                dialogComment = [false[index]]
+                                            "
+                                        >
+                                            Close
+                                        </v-btn>
+                                        <v-btn
+                                            color="blue darken-1"
+                                            text
+                                            @click="
+                                                modifyComment(
+                                                    comment.uuid,
+                                                    index
+                                                )
+                                            "
+                                        >
+                                            Save
+                                        </v-btn>
+                                    </v-card-actions>
+                                </v-card>
+                            </v-dialog>
                             <v-btn
                                 @click="deleteComment(comment.uuid)"
                                 class="ml-1"
@@ -181,58 +481,92 @@
     </v-app>
 </template>
 <script>
+import comments from "../services/comments.js";
 export default {
     data() {
         return {
+            user: {
+                initials: "JD",
+                fullName: "John Doe",
+                email: "john.doe@doe.com",
+            },
             posts: [],
+            post: [],
+            comment: [],
+            commentUpdate: [],
             userId: 0,
             userUuid: this.$store.state.userToken.uuid,
             admin: false,
-            comment: [],
-            post: [],
             renderComponent: true,
             userInfo: [],
+            dialog: [],
+            dialogComment: [],
+            dialogProfile: [],
+            postUpdate: [],
         };
     },
+    created() {
+        this.deleteComment();
+        this.addComment();
+    },
     methods: {
-        async forceRerender() {
-            await this.$store.dispatch("getPosts").then((response) => {
-                this.posts = response.data;
-            });
-            this.renderComponent = false;
-            this.$nextTick(() => {
-                Array.prototype.sortOn = function (key) {
-                    this.sort(function (a, b) {
-                        if (a[key] > b[key]) {
-                            return -1;
-                        } else if (a[key] < b[key]) {
-                            return 1;
-                        }
-                        return 0;
+        profilePath(user) {
+            console.log("/user/id/" + user);
+            this.$router.push("/user/" + user);
+        },
+        forceRerender() {
+            this.$store
+                .dispatch("getPosts")
+                .then((response) => {
+                    this.posts = response.data;
+                    this.renderComponent = false;
+                })
+                .then(() => {
+                    this.$nextTick(() => {
+                        Array.prototype.sortOn = function (key) {
+                            this.sort(function (a, b) {
+                                if (a[key] > b[key]) {
+                                    return -1;
+                                } else if (a[key] < b[key]) {
+                                    return 1;
+                                }
+                                return 0;
+                            });
+                        };
                     });
-                };
-                this.posts.sortOn("id");
-                this.renderComponent = true;
-            });
-        },
-        async deleteComment(uuid) {
-            await this.$store.dispatch("deleteComment", uuid);
-            this.forceRerender();
-        },
-        async addComment(uuid, index) {
-            if (this.validate(index) != false) {
-                await this.$store.dispatch("addComment", {
-                    postUuid: uuid,
-                    userUuid: this.userUuid,
-                    content: this.comment[index],
+                    this.posts.sortOn("id");
+                    this.renderComponent = true;
                 });
-                this.comment[index] = "";
-                this.forceRerender();
+        },
+        deleteComment(uuid) {
+            comments
+                .deleteComment(uuid)
+                .then(() => {
+                    this.forceRerender();
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        },
+        addComment(uuid, index) {
+            if (this.validate(index) != false) {
+                comments
+                    .addComment({
+                        postUuid: uuid,
+                        userUuid: this.userUuid,
+                        content: this.comment[index],
+                    })
+                    .then(() => {
+                        this.comment[index] = "";
+                        this.forceRerender();
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
             }
         },
         async addPost() {
             if (this.validatePost() != false) {
-                console.log(this.post);
                 await this.$store.dispatch("addPost", {
                     userUuid: this.userUuid,
                     content: this.post,
@@ -246,12 +580,20 @@ export default {
             await this.$store.dispatch("deletePost", uuid);
             this.forceRerender();
         },
-        async modifyPost(uuid) {
-            await this.$store.dispatch("modifyPost", uuid, {
-                userUuid: this.userUuid,
-                content: this.post,
-                title: this.userInfo.username,
+        async modifyPost(uuid, index) {
+            await this.$store.dispatch("modifyPost", {
+                uuid,
+                content: this.postUpdate,
             });
+            this.dialog = [false[index]];
+            this.forceRerender();
+        },
+        async modifyComment(uuid, index) {
+            await this.$store.dispatch("modifyComment", {
+                uuid,
+                content: this.commentUpdate,
+            });
+            this.dialogComment = [false[index]];
             this.forceRerender();
         },
         validate(index) {
