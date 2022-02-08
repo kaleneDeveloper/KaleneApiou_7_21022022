@@ -4,7 +4,6 @@
             <div class="d-flex justify-center">
                 <div class="text-center">
                     <h2>Welcome {{ username }}</h2>
-                    <h3>{{ username }}</h3>
                     <h4>{{ email }}</h4>
                     <h4>{{ users.createdAt }}</h4>
                     <v-avatar color="primary" size="40" class="mr-5">
@@ -108,7 +107,7 @@
     </v-app>
 </template>
 <script>
-import getPosts from "../services/getPosts";
+import getPosts from "../services/posts";
 export default {
     data: () => ({
         renderComponent: true,
@@ -138,25 +137,20 @@ export default {
             return this.users.profile && this.users.profile.length > 0
                 ? this.users.profile[0].email
                 : "";
-        }
-
+        },
     },
-    created() {
-        this.fetchPosts();
+    created: function () {
         this.fetchPostsUsers();
     },
     methods: {
-        fetchPosts() {
-            getPosts.getAll().then((response) => {
-                this.posts = response.data;
-            });
-        },
         fetchPostsUsers() {
-            getPosts;
             getPosts
                 .getPostUser(this.$store.state.userToken.uuid)
                 .then((response) => {
                     this.postsUser = response.data.posts;
+                })
+                .catch((error) => {
+                    console.log(error);
                 });
         },
         forceRerender() {
@@ -166,22 +160,21 @@ export default {
             });
         },
     },
-    beforeMount() {
-        this.$store.dispatch("getUserInfos").then((response) => {
-            this.users = response.data;
-        });
-        this.forceRerender();
-    },
-    mounted() {
+    mounted: function () {
         if (
             this.$store.state.user.userId === 0 ||
             this.$store.state.user.userId === null ||
-            this.$store.state.user.userId === undefined
+            this.$store.state.user.userId === undefined ||
+            localStorage.getItem("user") === null
         ) {
             this.$store.dispatch("logout");
             this.$router.push("/login");
             return;
         }
+        this.$store.dispatch("getUserInfos").then((response) => {
+            this.users = response.data;
+            this.fetchPostsUsers();
+        });
     },
 };
 </script>

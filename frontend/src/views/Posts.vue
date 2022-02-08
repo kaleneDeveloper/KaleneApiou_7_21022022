@@ -14,7 +14,7 @@
                             {{ subString }}
                         </v-icon>
                     </v-avatar>
-                    <v-textarea
+                    <v-text-field
                         v-if="userId !== 0 || admin === true"
                         v-model="post"
                         color="teal"
@@ -26,7 +26,7 @@
                         <template v-slot:label>
                             <div>Post</div>
                         </template>
-                    </v-textarea>
+                    </v-text-field>
                 </v-row>
                 <v-btn
                     v-if="this.userInfo.id === userId || admin === true"
@@ -45,7 +45,7 @@
                 </v-btn>
             </v-container>
             <!-- POSTS AND COMMENTS -->
-            <v-container v-for="(post, index) in posts" v-bind:key="post.id">
+            <v-container v-for="(post, index) in posts" v-bind:key="index">
                 <!-- POSTS -->
                 <v-col class="mb-10">
                     <v-card v-if="renderComponent">
@@ -58,19 +58,6 @@
                             </p>
                         </v-card-text>
                         <v-row class="justify-space-between">
-                            <!-- <v-avatar color="primary" size="46" class="mr-5">
-                                <img
-                                    v-if="post.user.profile[0].imageUrl"
-                                    :src="post.user.profile[0].imageUrl"
-                                />
-                                <v-icon v-else color="black">
-                                    {{
-                                        post.user.profile[0].username
-                                            .substring(0, 1)
-                                            .toUpperCase()
-                                    }}
-                                </v-icon>
-                            </v-avatar> -->
                             <div class="d-flex align-center">
                                 <template>
                                     <v-container>
@@ -242,6 +229,7 @@
                                 </span>
                             </div>
                             <div class="d-flex align-center mr-5">
+                                <!-- POST DIALOG -->
                                 <v-dialog
                                     v-model="dialog[index]"
                                     persistent
@@ -261,6 +249,7 @@
                                             fab
                                             x-small
                                             dark
+                                            @click="takePost(post.content)"
                                         >
                                             <v-icon>mdi-pencil</v-icon>
                                         </v-btn>
@@ -279,6 +268,7 @@
                                                             color="teal"
                                                             label="Post"
                                                             v-model="postUpdate"
+                                                            value="postUpdate"
                                                         >
                                                             <template
                                                                 v-slot:label
@@ -335,7 +325,7 @@
                 <v-col
                     id="comment"
                     v-for="(comment, index) in post.comments"
-                    v-bind:key="comment.id"
+                    v-bind:key="index"
                     cols="12"
                     sm="12"
                     md="12"
@@ -365,8 +355,9 @@
                             <p class="mt-auto username subtitle-2 font-italic">
                                 @{{ comment.user.profile[0].username }}
                             </p>
+                            <!-- COMMENT DIALOG -->
                             <v-dialog
-                                v-model="dialogComment[index]"
+                                v-model="dialogComment[comment.id]"
                                 persistent
                                 max-width="600px"
                             >
@@ -377,13 +368,14 @@
                                             admin === true
                                         "
                                         id="modify-comment"
-                                        v-bind="attrs"
+                                        :v-bind="attrs"
                                         v-on="on"
                                         class="ml-auto"
                                         color="primary"
                                         fab
                                         x-small
                                         dark
+                                        @click="takeComment(comment.content)"
                                     >
                                         <v-icon>mdi-pencil</v-icon>
                                     </v-btn>
@@ -400,7 +392,7 @@
                                                 <v-col cols="12">
                                                     <v-textarea
                                                         color="teal"
-                                                        label="Commentaire"
+                                                        label="modify-comment"
                                                         v-model="commentUpdate"
                                                     >
                                                         <template v-slot:label>
@@ -419,7 +411,9 @@
                                             color="blue darken-1"
                                             text
                                             @click="
-                                                dialogComment = [false[index]]
+                                                dialogComment = [
+                                                    false[comment.id],
+                                                ]
                                             "
                                         >
                                             Close
@@ -430,7 +424,7 @@
                                             @click="
                                                 modifyComment(
                                                     comment.uuid,
-                                                    index
+                                                    comment.id
                                                 )
                                             "
                                         >
@@ -482,6 +476,7 @@
 </template>
 <script>
 import comments from "../services/comments.js";
+import posts from "../services/posts.js";
 export default {
     data() {
         return {
@@ -508,15 +503,22 @@ export default {
     created() {
         this.deleteComment();
         this.addComment();
+        this.addPost();
     },
     methods: {
+        takePost(content) {
+            this.postUpdate = content;
+        },
+        takeComment(content) {
+            this.commentUpdate = content;
+        },
         profilePath(user) {
             console.log("/user/id/" + user);
             this.$router.push("/user/" + user);
         },
         forceRerender() {
-            this.$store
-                .dispatch("getPosts")
+            posts
+                .getPosts()
                 .then((response) => {
                     this.posts = response.data;
                     this.renderComponent = false;
@@ -565,17 +567,24 @@ export default {
                     });
             }
         },
-        async addPost() {
+        addPost() {
             if (this.validatePost() != false) {
-                await this.$store.dispatch("addPost", {
-                    userUuid: this.userUuid,
-                    content: this.post,
-                    title: this.userInfo.username,
-                });
-                this.post = "";
-                this.forceRerender();
+                posts
+                    .addPost({
+                        userUuid: this.userUuid,
+                        content: this.post,
+                        title: this.userInfo.username,
+                    })
+                    .then(() => {
+                        this.postUpdate = "";
+                        this.forceRerender();
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
             }
         },
+
         async deletePost(uuid) {
             await this.$store.dispatch("deletePost", uuid);
             this.forceRerender();
@@ -586,7 +595,7 @@ export default {
                 content: this.postUpdate,
             });
             this.dialog = [false[index]];
-            this.forceRerender();
+            this.postUpdate = this.forceRerender();
         },
         async modifyComment(uuid, index) {
             await this.$store.dispatch("modifyComment", {

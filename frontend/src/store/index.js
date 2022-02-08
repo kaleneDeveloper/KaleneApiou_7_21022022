@@ -154,7 +154,6 @@ const store = new Vuex.Store({
             });
         },
         modifyComment({ commit }, content) {
-            console.log(content);
             return new Promise((resolve, reject) => {
                 commit;
                 instance
@@ -167,7 +166,6 @@ const store = new Vuex.Store({
                     });
             });
         },
- 
         addPost: ({ commit }, post) => {
             return new Promise((resolve, reject) => {
                 commit;
