@@ -53,16 +53,22 @@ exports.postCreate = async (req, res) => {
     if (req.files) {
         const { title, content, userUuid } = req.body;
         try {
+            console.log(req.files);
             const user = await User.findOne({
                 where: { uuid: userUuid },
+            });
+            let imagesUrl = [];
+            await req.files.posts.forEach((image) => {
+                imagesUrl +=
+                    `${req.protocol}://${req.get(
+                        "host"
+                    )}/images/uploads/posts/${image.filename}` + " + ";
             });
             const post = await Post.create({
                 title,
                 userId: user.id,
                 content,
-                imageUrl: `${req.protocol}://${req.get(
-                    "host"
-                )}/images/uploads/posts/${req.files.posts[0].filename}`,
+                imageUrl: imagesUrl.slice(0, -2),
             });
             return res.send(post);
         } catch (error) {
@@ -104,7 +110,6 @@ exports.updatePost = async (req, res) => {
                     "/images/uploads/posts/"
                 )[1];
                 fs.unlink(`./../images/uploads/posts/${filename}`, () => {});
-
             }
             const postObject = {
                 content,
@@ -150,13 +155,12 @@ exports.deletePost = async (req, res) => {
         //         .json({ error: "Vous n'avez pas les droits" });
         // }
         if (post.imageUrl !== null) {
-            const filename = post.imageUrl.split("/images/uploads/posts/")[1];
-            fs.unlink(`./../images/uploads/posts/${filename}`, () => {});
-        }
-        for (let index = 0; index < post.comments.length; index++) {
-            let filename = post.comments[index].content;
-            console.log(filename);
-            // fs.unlink(`./../images/uploads/posts/${filename}`, () => {});
+            const filename = post.imageUrl.split(" ");
+            const result = filename.filter((e) => e && e !== "+");
+            result.forEach((filename) => {
+                filename = filename.split("/images/uploads/posts/")[1];
+                fs.unlink(`./../images/uploads/posts/${filename}`, () => {});
+            });
         }
         await Post.destroy({
             where: { uuid: req.params.uuid },

@@ -165,7 +165,9 @@ export default {
             this.$store.state.user.userId === 0 ||
             this.$store.state.user.userId === null ||
             this.$store.state.user.userId === undefined ||
-            localStorage.getItem("user") === null
+            localStorage.getItem("user") === null ||
+            localStorage.getItem("user") === undefined ||
+            localStorage.getItem("user") === ""
         ) {
             this.$store.dispatch("logout");
             this.$router.push("/login");

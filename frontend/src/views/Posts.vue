@@ -28,6 +28,7 @@
                         </template>
                     </v-text-field>
                 </v-row>
+                <upload-image ref="upload"></upload-image>
                 <v-btn
                     v-if="this.userInfo.id === userId || admin === true"
                     class="mt-3"
@@ -39,6 +40,7 @@
                     Add Post
                 </v-btn>
             </v-container>
+
             <v-container>
                 <v-btn class="mx-2 btn-add-post" fab dark color="indigo">
                     <v-icon dark> mdi-plus </v-icon>
@@ -57,6 +59,13 @@
                                 {{ post.content }}
                             </p>
                         </v-card-text>
+                        <v-img
+                            v-for="(image, index) in imagesUrlSource(index)"
+                            v-bind:key="index"
+                            max-width="400"
+                            contain
+                            :src="image"
+                        ></v-img>
                         <v-row class="justify-space-between">
                             <div class="d-flex align-center">
                                 <template>
@@ -477,14 +486,14 @@
 <script>
 import comments from "../services/comments.js";
 import posts from "../services/posts.js";
+import uploadImage from "../components/Uploadimage";
 export default {
+    components: {
+        uploadImage,
+    },
     data() {
         return {
-            user: {
-                initials: "JD",
-                fullName: "John Doe",
-                email: "john.doe@doe.com",
-            },
+            currentImage: undefined,
             posts: [],
             post: [],
             comment: [],
@@ -498,6 +507,7 @@ export default {
             dialogComment: [],
             dialogProfile: [],
             postUpdate: [],
+            imagesUrl: [],
         };
     },
     created() {
@@ -506,6 +516,14 @@ export default {
         this.addPost();
     },
     methods: {
+        imagesUrlSource(index) {
+            if (this.posts[index].imageUrl !== null) {
+                const result = this.posts[index].imageUrl.split(" ");
+                const result1 = result.filter((e) => e && e !== "+");
+                this.imagesUrl[index] = result1;
+                return result1;
+            }
+        },
         takePost(content) {
             this.postUpdate = content;
         },
@@ -569,19 +587,26 @@ export default {
         },
         addPost() {
             if (this.validatePost() != false) {
-                posts
-                    .addPost({
-                        userUuid: this.userUuid,
-                        content: this.post,
-                        title: this.userInfo.username,
-                    })
-                    .then(() => {
-                        this.postUpdate = "";
-                        this.forceRerender();
-                    })
-                    .catch((error) => {
-                        console.log(error);
-                    });
+                this.$refs.upload._self.uploadFilePost(
+                    this.userUuid,
+                    this.post,
+                    this.userInfo.username
+                );
+                this.post = "";
+                this.forceRerender();
+                // posts
+                //     .addPost({
+                //         userUuid: this.userUuid,
+                //         content: this.post,
+                //         title: this.userInfo.username,
+                //     })
+                //     .then(() => {
+                //         this.post = "";
+                //         this.forceRerender();
+                //     })
+                //     .catch((error) => {
+                //         console.log(error);
+                //     });
             }
         },
 

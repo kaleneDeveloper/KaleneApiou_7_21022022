@@ -45,7 +45,7 @@ module.exports = multer({ limits, storage }).fields([
     },
     {
         name: "posts",
-        maxCount: 1,
+        maxCount: 4,
     },
     {
         name: "videos",
