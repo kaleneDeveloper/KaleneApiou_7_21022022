@@ -11,10 +11,6 @@ const maxSize = 8 * 1024 * 1024;
 const limits = {
     fileSize: maxSize,
 };
-const maxCount = 5;
-const count = {
-    files: maxCount,
-};
 const types = Object.keys(MIME_TYPES);
 const storage = multer.diskStorage({
     destination: (req, file, callback) => {

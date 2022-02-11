@@ -2,23 +2,17 @@
     <v-container class="sendTweet">
         <!-- UPLOAD_FILES -->
         <div>
-            <v-row no-gutters justify="center" align="center">
-                <v-col cols="8">
+            <v-row no-gutters align="center">
+                <v-col cols="12" sm="2">
                     <template>
                         <v-file-input
-                            show-size
                             label="Select Image"
                             accept="images/posts/*"
                             @change="selectImage($event)"
                             multiple
+                            prepend-icon="mdi-camera"
                         ></v-file-input>
                     </template>
-                </v-col>
-                <v-col cols="4" class="pl-2">
-                    <v-btn color="success" dark small @click="uploadFilePost">
-                        Upload
-                        <v-icon right dark>mdi-cloud-upload</v-icon>
-                    </v-btn>
                 </v-col>
             </v-row>
             <div v-if="progress">
