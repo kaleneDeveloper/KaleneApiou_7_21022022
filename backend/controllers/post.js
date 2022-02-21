@@ -96,15 +96,14 @@ exports.updatePost = async (req, res) => {
     if (req.files) {
         const { title, content } = req.body;
         try {
-            console.log(req.files);
             const post = await Post.findAll({
                 where: { uuid: req.params.uuid },
             });
-            // if (post[0].userId !== req.auth.userId) {
-            //     return res
-            //         .status(401)
-            //         .json({ error: "Vous n'avez pas les droits" });
-            // }
+            if (post[0].userId !== req.auth.userId && req.auth.admin !== true) {
+                return res
+                    .status(401)
+                    .json({ error: "Vous n'avez pas les droits" });
+            }
             if (post[0].imageUrl !== null) {
                 const filename = post[0].imageUrl.split(
                     "/images/uploads/posts/"
@@ -148,12 +147,11 @@ exports.deletePost = async (req, res) => {
             where: { uuid: req.params.uuid },
             include: ["comments"],
         });
-
-        // if (post.userId !== req.auth.userId) {
-        //     return res
-        //         .status(401)
-        //         .json({ error: "Vous n'avez pas les droits" });
-        // }
+        if (post.userId !== req.auth.userId && req.auth.admin !== true) {
+            return res
+                .status(401)
+                .json({ error: "Vous n'avez pas les droits" });
+        }
         if (post.imageUrl !== null) {
             const filename = post.imageUrl.split(" ");
             const result = filename.filter((e) => e && e !== "+");

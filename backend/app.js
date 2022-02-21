@@ -3,6 +3,7 @@ const userRoutes = require("./routes/user");
 const postRouter = require("./routes/post");
 const commentRouter = require("./routes/comment");
 const path = require("path");
+const { urlencoded } = require("express");
 
 const app = express();
 app.use((req, res, next) => {
@@ -18,7 +19,7 @@ app.use((req, res, next) => {
     next();
 });
 app.use(express.json());
-
+app.use(express.urlencoded({ extended: true }));
 app.use("/api/comments", commentRouter);
 app.use("/api/users", userRoutes);
 app.use("/api/posts", postRouter);

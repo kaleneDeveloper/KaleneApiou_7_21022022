@@ -42,9 +42,19 @@ exports.commentCreate = async (req, res) => {
 };
 exports.commentDelete = async (req, res) => {
     try {
-        const comment = await Comment.destroy({
+        const comment = await Comment.findAll({
             where: { uuid: req.params.uuid },
         });
+        if (comment.userId !== req.auth.userId && req.auth.admin !== true) {
+            return res
+                .status(401)
+                .json({ error: "Vous n'avez pas les droits" });
+        }
+
+        await Comment.destroy({
+            where: { uuid: req.params.uuid },
+        });
+
         return res.json(comment);
     } catch (error) {
         res.status(500).json(error);
@@ -53,6 +63,14 @@ exports.commentDelete = async (req, res) => {
 exports.commentUpdate = async (req, res) => {
     try {
         const { content, imageUrl } = req.body;
+        const comment = await Comment.findAll({
+            where: { uuid: req.params.uuid },
+        });
+        if (comment[0].userId !== req.auth.userId && req.auth.admin !== true) {
+            return res
+                .status(401)
+                .json({ error: "Vous n'avez pas les droits" });
+        }
         const commentObject = {
             content,
             imageUrl,
@@ -60,6 +78,7 @@ exports.commentUpdate = async (req, res) => {
         await Comment.update(commentObject, {
             where: { uuid: req.params.uuid },
         });
+
         return res.json(commentObject);
     } catch (error) {
         res.status(500).json(error);
