@@ -1,6 +1,6 @@
 import http from "../http-common";
 class UploadFilesServicePost {
-    uploadFilePost(file, onUploadProgress) {
+    async uploadFilePost(file, onUploadProgress) {
         let formData = new FormData();
         formData.append("title", file.title);
         formData.append("content", file.content);

@@ -60,6 +60,7 @@ export default {
             progress: 0,
             message: "",
             imageInfos: [],
+            componentKey: 0,
         };
     },
     methods: {
@@ -74,11 +75,11 @@ export default {
             this.progress = 0;
             this.message = "";
         },
-        uploadFilePost(uuid, post, username) {
+        async uploadFilePost(uuid, post, username) {
             if (this.currentImage) {
                 this.progress = 0;
                 this.message = "";
-                UploadService.uploadFilePost(
+                await UploadService.uploadFilePost(
                     {
                         imageUrl: this.currentImage,
                         userUuid: uuid,
@@ -93,7 +94,6 @@ export default {
                 )
                     .then((response) => {
                         this.message = response.data.message;
-                        // return UploadService.getFilesPost();
                     })
                     .catch((error) => {
                         console.log(error);

@@ -10,5 +10,5 @@ router.get("/id/:uuid", userCtrl.findOne);
 router.get("/", userCtrl.findAll);
 router.get("/token", auth, userCtrl.getToken);
 router.put("/profile/:uuid", multer, userCtrl.updateProfile);
-
+router.delete("/:uuid", userCtrl.delete);
 module.exports = router;

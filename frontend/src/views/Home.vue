@@ -95,6 +95,7 @@
             <v-container v-for="postUser in postsUser" v-bind:key="postUser.id">
                 <div>
                     {{ postUser.title }}
+                    {{ postUser.content }}
                 </div>
                 <div
                     v-for="comment in postUser.comments"
@@ -167,7 +168,7 @@ export default {
             this.$store.state.user.userId === undefined ||
             localStorage.getItem("user") === null ||
             localStorage.getItem("user") === undefined ||
-            localStorage.getItem("user") === ""
+            localStorage.getItem("userinfos") === undefined
         ) {
             this.$store.dispatch("logout");
             this.$router.push("/login");

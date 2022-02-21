@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const fs = require("fs");
 require("dotenv").config({ encoding: "latin1" });
+
 exports.signup = async (req, res) => {
     const { username, admin, email } = req.body;
     const password = bcrypt.hashSync(req.body.password, 10);
@@ -149,4 +150,19 @@ exports.updateProfile = async (req, res) => {
 };
 exports.getToken = async (req, res) => {
     res.send(req.auth);
+};
+exports.delete = async (req, res) => {
+    try {
+        const user = await User.findOne({ where: { uuid: req.params.uuid } });
+        const profile = await Profile.findOne({
+            where: { userUuid: req.params.uuid },
+        });
+        const filename = profile.imageUrl.split("/images/uploads/profiles/")[1];
+        fs.unlink(`./../images/uploads/profiles/${filename}`, () => {});
+        await user.destroy();
+        await profile.destroy();
+        return res.send(user);
+    } catch (error) {
+        res.status(500).send(error);
+    }
 };
