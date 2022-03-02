@@ -1,8 +1,7 @@
 <template>
     <v-app id="inspire">
         <!-- MOBILE -->
-        <v-main>
-            <autoLogin></autoLogin>
+        <v-main :key="componentKey">
             <v-navigation-drawer v-model="drawer" app>
                 <div id="home">
                     <v-list nav dense>
@@ -67,7 +66,7 @@
                 ></v-app-bar-nav-icon>
                 <v-toolbar-title>Groupamania</v-toolbar-title>
             </v-app-bar>
-            <router-view :key="$route.fullPath" />
+            <router-view />
         </v-main>
         <!-- DESKTOP -->
         <v-main> </v-main>
@@ -75,20 +74,24 @@
 </template>
 
 <script>
-import autoLogin from "./components/AutoLogout";
+import AutoLogout from "./services/AutoLogout";
 export default {
     name: "App",
     components: {
-        autoLogin,
+
     },
     data: () => ({
         drawer: null,
+        componentKey: 0,
     }),
     methods: {
         logout: function () {
             this.$store.dispatch("logout");
             this.$router.push("/login");
         },
+    },
+    mounted() {
+       AutoLogout
     },
 };
 </script>

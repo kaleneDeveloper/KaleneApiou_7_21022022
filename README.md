@@ -81,4 +81,4 @@ npm run serve
 
 ### Contact
 
-Sylvain TESSIER : <apiou.kalene@gmail.com>
+Kalene APIOU : <apiou.kalene@gmail.com>

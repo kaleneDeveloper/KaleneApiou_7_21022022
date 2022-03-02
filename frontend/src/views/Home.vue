@@ -1,5 +1,5 @@
 <template>
-    <v-app v-if="forceRerender" id="inspire">
+    <v-app :key="componentKey" id="inspire">
         <v-main class="pl-0">
             <div class="d-flex justify-center">
                 <div class="text-center">
@@ -12,84 +12,6 @@
                             {{ subString }}
                         </v-icon>
                     </v-avatar>
-                    <!-- <v-row justify="center mt-10">
-                        <v-dialog v-model="dialog" persistent max-width="600px">
-                            <template v-slot:activator="{ on, attrs }">
-                                <v-btn
-                                    color="primary"
-                                    dark
-                                    v-bind="attrs"
-                                    v-on="on"
-                                >
-                                    modifier mon profil
-                                </v-btn>
-                            </template>
-                            <v-card>
-                                <v-card-title>
-                                    <span class="text-h5"
-                                        >Profil utilisateur</span
-                                    >
-                                </v-card-title>
-                                <v-card-text>
-                                    <v-container>
-                                        <v-row>
-                                            <v-col cols="12" sm="6" md="6">
-                                                <v-text-field
-                                                    label="Prénom"
-                                                ></v-text-field>
-                                            </v-col>
-                                            <v-col cols="12" sm="6" md="6">
-                                                <v-text-field
-                                                    label="Nom"
-                                                    hint="example of helper text only on focus"
-                                                ></v-text-field>
-                                            </v-col>
-
-                                            <v-col cols="12">
-                                                <v-text-field
-                                                    label="Email"
-                                                ></v-text-field>
-                                            </v-col>
-                                            <v-col cols="12">
-                                                <v-text-field
-                                                    label="Mot de pass"
-                                                    type="password"
-                                                ></v-text-field>
-                                            </v-col>
-                                            <v-col cols="12" sm="6">
-                                                <v-text-field
-                                                    v-model="numberValue"
-                                                    label="Age"
-                                                    hide-details
-                                                    single-line
-                                                    type="number"
-                                                />
-                                            </v-col>
-                                            <v-col cols="12" sm="6"> </v-col>
-                                        </v-row>
-                                    </v-container>
-                                    <v-container> </v-container>
-                                </v-card-text>
-                                <v-card-actions>
-                                    <v-spacer></v-spacer>
-                                    <v-btn
-                                        color="blue darken-1"
-                                        text
-                                        @click="dialog = false"
-                                    >
-                                        Close
-                                    </v-btn>
-                                    <v-btn
-                                        color="blue darken-1"
-                                        text
-                                        @click="dialog = false"
-                                    >
-                                        Save
-                                    </v-btn>
-                                </v-card-actions>
-                            </v-card>
-                        </v-dialog>
-                    </v-row> -->
                 </div>
             </div>
             <v-container v-for="postUser in postsUser" v-bind:key="postUser.id">
@@ -111,7 +33,6 @@
 import getPosts from "../services/posts";
 export default {
     data: () => ({
-        renderComponent: true,
         componentKey: 0,
         users: [],
         drawer: null,
@@ -140,9 +61,7 @@ export default {
                 : "";
         },
     },
-    created: function () {
-        this.fetchPostsUsers();
-    },
+
     methods: {
         fetchPostsUsers() {
             getPosts
@@ -155,10 +74,7 @@ export default {
                 });
         },
         forceRerender() {
-            this.renderComponent = false;
-            this.$nextTick(() => {
-                this.renderComponent = true;
-            });
+            this.componentKey += 1;
         },
     },
     mounted: function () {
