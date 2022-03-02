@@ -447,18 +447,16 @@ export default {
                         this.posts = response.data;
                     })
                     .then(() => {
-                        this.$nextTick(() => {
-                            Array.prototype.sortOn = function (key) {
-                                this.sort(function (a, b) {
-                                    if (a[key] > b[key]) {
-                                        return -1;
-                                    } else if (a[key] < b[key]) {
-                                        return 1;
-                                    }
-                                    return 0;
-                                });
-                            };
-                        });
+                        Array.prototype.sortOn = function (key) {
+                            this.sort(function (a, b) {
+                                if (a[key] > b[key]) {
+                                    return -1;
+                                } else if (a[key] < b[key]) {
+                                    return 1;
+                                }
+                                return 0;
+                            });
+                        };
                         this.posts.sortOn("id");
                     });
             });
@@ -502,18 +500,17 @@ export default {
                     this.posts = response.data;
                 })
                 .then(() => {
-                    this.$nextTick(() => {
-                        Array.prototype.sortOn = function (key) {
-                            this.sort(function (a, b) {
-                                if (a[key] > b[key]) {
-                                    return -1;
-                                } else if (a[key] < b[key]) {
-                                    return 1;
-                                }
-                                return 0;
-                            });
-                        };
-                    });
+                    Array.prototype.sortOn = function (key) {
+                        this.sort(function (a, b) {
+                            if (a[key] > b[key]) {
+                                return -1;
+                            } else if (a[key] < b[key]) {
+                                return 1;
+                            }
+                            return 0;
+                        });
+                    };
+
                     this.posts.sortOn("id");
                 });
         },

@@ -1,4 +1,3 @@
-// import http from "../http-common";
 import axios from "axios";
 let user = localStorage.getItem("user");
 if (user) {

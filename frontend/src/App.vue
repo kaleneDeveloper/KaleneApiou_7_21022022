@@ -2,6 +2,7 @@
     <v-app id="inspire">
         <!-- MOBILE -->
         <v-main>
+            <autoLogin></autoLogin>
             <v-navigation-drawer v-model="drawer" app>
                 <div id="home">
                     <v-list nav dense>
@@ -74,8 +75,12 @@
 </template>
 
 <script>
+import autoLogin from "./components/AutoLogout";
 export default {
     name: "App",
+    components: {
+        autoLogin,
+    },
     data: () => ({
         drawer: null,
     }),
