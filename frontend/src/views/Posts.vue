@@ -42,7 +42,6 @@ export default {
             this.userInfo = response.data;
         });
     },
-    created() {},
     methods: {
         forceRerender() {
             this.componentKey += 1;

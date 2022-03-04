@@ -77,9 +77,7 @@
 import AutoLogout from "./services/AutoLogout";
 export default {
     name: "App",
-    components: {
-
-    },
+    components: {},
     data: () => ({
         drawer: null,
         componentKey: 0,
@@ -91,7 +89,7 @@ export default {
         },
     },
     mounted() {
-       AutoLogout
+        AutoLogout;
     },
 };
 </script>

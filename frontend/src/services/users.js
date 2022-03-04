@@ -20,7 +20,19 @@ export default {
     getProfile(id) {
         return http.get("/api/users/id/" + id);
     },
-    updateProfile(id) {
-        return http.put("/api/users/profile/id/" + id);
+    updateProfile(id, profile) {
+        let formData = new FormData();
+        formData.append("username", profile.username);
+        formData.append("lastName", profile.lastName);
+        formData.append("age", profile.age);
+        formData.append("email", profile.email);
+        formData.append("password", profile.password);
+        formData.append("profile", profile.imageUrl);
+
+        return http.put("/api/users/profile/" + id, formData, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+        });
     },
 };

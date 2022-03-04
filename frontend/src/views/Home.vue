@@ -1,19 +1,23 @@
 <template>
-    <v-app :key="componentKey" id="inspire">
-        <v-main class="pl-0">
+    <v-app id="inspire">
+        <v-main :key="componentKey" class="pl-0">
             <div class="d-flex justify-center">
                 <div class="text-center">
                     <h2>Welcome {{ username }}</h2>
                     <h4>{{ email }}</h4>
                     <h4>{{ users.createdAt }}</h4>
                     <v-avatar color="primary" size="40" class="mr-5">
-                        <img v-if="imgUrl" :src="imgUrl" />
+                        <img v-if="imgUrl" :src="imgUrl" alt="Profile" />
                         <v-icon v-else color="black">
                             {{ subString }}
                         </v-icon>
                     </v-avatar>
                 </div>
             </div>
+            <update-profile
+                :parentForceRender="forceRerender"
+                :parentData="data()"
+            ></update-profile>
             <v-container v-for="postUser in postsUser" v-bind:key="postUser.id">
                 <div>
                     {{ postUser.title }}
@@ -31,7 +35,11 @@
 </template>
 <script>
 import getPosts from "../services/posts";
+import UpdateProfile from "../components/updateProfile";
 export default {
+    components: {
+        UpdateProfile,
+    },
     data: () => ({
         componentKey: 0,
         users: [],
@@ -63,6 +71,11 @@ export default {
     },
 
     methods: {
+        data() {
+            return {
+                users: this.users,
+            };
+        },
         fetchPostsUsers() {
             getPosts
                 .getPostUser(this.$store.state.userToken.uuid)

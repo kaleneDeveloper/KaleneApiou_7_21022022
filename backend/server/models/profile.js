@@ -24,7 +24,7 @@ module.exports = (sequelize, DataTypes) => {
                 defaultValue:
                     "http://localhost:3000/images/uploads/profiles/blank-profile.png",
             },
-            age: { type: DataTypes.INTEGER, allowNull: true },
+            age: { type: DataTypes.INTEGER, allowNull: true, defaultValue: 0 },
         },
         {
             sequelize,

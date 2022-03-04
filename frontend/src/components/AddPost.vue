@@ -2,7 +2,11 @@
     <v-container class="sendTweet">
         <v-row class="d-flex align-center">
             <v-avatar color="primary" size="50" class="mr-5 avatar mb-6">
-                <img v-if="profile.imageUrl" :src="profile.imageUrl" />
+                <img
+                    v-if="profile.imageUrl"
+                    :src="profile.imageUrl"
+                    :alt="profile.username"
+                />
                 <v-icon v-else>
                     {{ subString }}
                 </v-icon>

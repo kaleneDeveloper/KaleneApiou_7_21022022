@@ -20,7 +20,7 @@
                             cols="8"
                             sm="4"
                         >
-                            <v-img contain :src="image"></v-img>
+                            <v-img contain :src="image" :alt="image"></v-img>
                         </v-col>
                     </v-row>
                     <v-row class="justify-space-between">
@@ -50,6 +50,11 @@
                                                                 post.user
                                                                     .profile[0]
                                                                     .imageUrl
+                                                            "
+                                                            :alt="
+                                                                post.user
+                                                                    .profile[0]
+                                                                    .username
                                                             "
                                                         />
                                                         <v-icon
@@ -89,6 +94,11 @@
                                                                     post.user
                                                                         .profile[0]
                                                                         .imageUrl
+                                                                "
+                                                                :alt="
+                                                                    post.user
+                                                                        .profile[0]
+                                                                        .username
                                                                 "
                                                             />
                                                             <v-icon
@@ -287,6 +297,7 @@
                             <img
                                 v-if="comment.user.profile[0].imageUrl"
                                 :src="comment.user.profile[0].imageUrl"
+                                alt="avatar"
                             />
                             <v-icon v-else color="black">
                                 {{
@@ -579,7 +590,9 @@ export default {
                 : "";
         },
     },
-    mounted() {},
+    mounted() {
+        
+    },
 };
 </script>
 <style scoped>

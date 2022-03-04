@@ -100,37 +100,51 @@ exports.findOne = async (req, res) => {
 };
 exports.updateProfile = async (req, res) => {
     if (req.files.profile !== undefined) {
-        console.log(req.files);
-        const { username, lastName, age, email, password } = req.body;
+        const { username, lastName, age, email } = req.body;
+        const password = bcrypt.hashSync(req.body.password, 10);
         try {
-            const profile = await Profile.findAll({
-                where: { userUuid: req.params.uuid },
-            });
-            const filename = profile[0].imageUrl.split(
-                "/images/uploads/profiles/"
-            )[1];
-            fs.unlink(`./../images/uploads/profiles/${filename}`, () => {});
-            const profilObject = {
-                username,
-                lastName,
-                age,
-                email,
-                password,
-                imageUrl: `${req.protocol}://${req.get(
-                    "host"
-                )}/images/uploads/profiles/${req.files.profile[0].filename}`,
-            };
-            await Profile.update(profilObject, {
-                where: { userUuid: req.params.uuid },
-            });
-            return res.send(profilObject);
+            await User.findOne({ where: { username: username } })
+                .then((user) => {
+                    if (user && user.username !== username) {
+                        return res
+                            .status(401)
+                            .send({ message: "Username already exists" });
+                    }
+                    const profile = Profile.findAll({
+                        where: { userUuid: req.params.uuid },
+                    });
+                    const filename = profile[0].imageUrl.split(
+                        "/images/uploads/profiles/"
+                    )[1];
+                    fs.unlink(
+                        `./../images/uploads/profiles/${filename}`,
+                        () => {}
+                    );
+                    const profilObject = {
+                        username,
+                        lastName,
+                        age,
+                        email,
+                        password,
+                        imageUrl: `${req.protocol}://${req.get(
+                            "host"
+                        )}/images/uploads/profiles/${
+                            req.files.profile[0].filename
+                        }`,
+                    };
+                    Profile.update(profilObject, {
+                        where: { userUuid: req.params.uuid },
+                    });
+                    return res.send(profilObject);
+                })
+                .catch((error) => res.status(500).json({ error }));
         } catch (error) {
             res.status(500).send(error);
         }
     } else {
         try {
-            const { username, lastName, age, email, password, imageUrl } =
-                req.body;
+            const { username, lastName, age, email, imageUrl } = req.body;
+            const password = bcrypt.hashSync(req.body.password, 10);
             const profileObject = {
                 username,
                 lastName,
@@ -139,10 +153,20 @@ exports.updateProfile = async (req, res) => {
                 password,
                 imageUrl,
             };
-            await Profile.update(profileObject, {
-                where: { userUuid: req.params.uuid },
-            });
-            return res.send(profileObject);
+            await User.findOne({ where: { username: username } }).then(
+                (user) => {
+                    if (user && user.username !== username) {
+                        return res
+                            .status(401)
+                            .send({ message: "Username already exists" });
+                    }
+
+                    Profile.update(profileObject, {
+                        where: { userUuid: req.params.uuid },
+                    });
+                    return res.send(profileObject);
+                }
+            );
         } catch (error) {
             res.status(500).send(error);
         }
