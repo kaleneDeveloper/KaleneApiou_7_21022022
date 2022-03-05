@@ -36,9 +36,6 @@ git clone https://github.com/kaleneDeveloper/KaleneApiou_7_21022022
 à partir du dossier cloné :
 cd backend
 npm install
-mkdir images
-cd images
-mkdir profile
 ```
 
 #### Créer un fichier .env dans le dossier config
@@ -55,17 +52,18 @@ DB_NAME=sequelize_02
 DB_PASSWORD= 'Ajouter vos infos'
 ```
 
-#### Créer une base de donnée avec le nom Groupomania
+#### Créer une base de donnée avec le nom sequelize_02
 
 ```
-CREATE DATABASE Groupomania;
+CREATE DATABASE sequelize_02;
 Verifier vos données de connection dans le fichier /backend/server/config/.env
 ```
 
 #### Démarrage backend
 
 ```
-npm start
+cd backend/server
+node server
 ```
 
 ## Installation Frontend
