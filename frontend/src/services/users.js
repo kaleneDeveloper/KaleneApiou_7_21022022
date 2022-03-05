@@ -15,7 +15,8 @@ const http = axios.create({
         Authorization: "Bearer " + user.token,
     },
 });
-
+console.log("token", user.token);
+// console.log(this.$store.state.user.token);
 export default {
     getProfile(id) {
         return http.get("/api/users/id/" + id);
@@ -26,7 +27,9 @@ export default {
         formData.append("lastName", profile.lastName);
         formData.append("age", profile.age);
         formData.append("email", profile.email);
-        formData.append("password", profile.password);
+        if (profile.password !== "") {
+            formData.append("password", profile.password);
+        }
         formData.append("profile", profile.imageUrl);
 
         return http.put("/api/users/profile/" + id, formData, {

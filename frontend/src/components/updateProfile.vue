@@ -118,6 +118,7 @@ export default {
             this.usernameUpdate = this.parentData.users.profile[0].username;
             this.nameUpdate = this.parentData.users.profile[0].lastName;
             this.emailUpdate = this.parentData.users.profile[0].email;
+            // this.passwordUpdate = this.parentData.users.profile[0].password;
         },
         updateProfile() {
             user.updateProfile(this.parentData.users.uuid, {
@@ -143,6 +144,9 @@ export default {
                 this.$router.go();
             });
         },
+    },
+    mounted() {
+        // this.$store.dispatch("getUserToken").then(() => {});
     },
 };
 </script>

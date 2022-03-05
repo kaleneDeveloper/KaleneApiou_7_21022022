@@ -35,7 +35,9 @@
 </template>
 <script>
 import getPosts from "../services/posts";
+import user from "../services/users";
 import UpdateProfile from "../components/updateProfile";
+
 export default {
     components: {
         UpdateProfile,
@@ -46,6 +48,7 @@ export default {
         drawer: null,
         posts: [],
         postsUser: [],
+        profile: [],
     }),
     computed: {
         imgUrl() {
@@ -76,6 +79,15 @@ export default {
                 users: this.users,
             };
         },
+        fetchProfile() {
+            user.getProfile(this.$store.state.userToken.uuid)
+                .then((response) => {
+                    this.profile = response.data;
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        },
         fetchPostsUsers() {
             getPosts
                 .getPostUser(this.$store.state.userToken.uuid)
@@ -90,7 +102,7 @@ export default {
             this.componentKey += 1;
         },
     },
-    mounted: function () {
+    mounted() {
         if (
             this.$store.state.user.userId === 0 ||
             this.$store.state.user.userId === null ||
@@ -105,8 +117,8 @@ export default {
         }
         this.$store.dispatch("getUserInfos").then((response) => {
             this.users = response.data;
-            this.fetchPostsUsers();
         });
+        
     },
 };
 </script>

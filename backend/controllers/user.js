@@ -101,7 +101,11 @@ exports.findOne = async (req, res) => {
 exports.updateProfile = async (req, res) => {
     if (req.files.profile !== undefined) {
         const { username, lastName, age, email } = req.body;
-        const password = bcrypt.hashSync(req.body.password, 10);
+        if (req.body.password !== undefined) {
+            password = bcrypt.hashSync(req.body.password, 10);
+        } else {
+            password = req.body.password;
+        }
         try {
             await User.findOne({ where: { username: username } })
                 .then((user) => {
@@ -150,7 +154,11 @@ exports.updateProfile = async (req, res) => {
     } else {
         try {
             const { username, lastName, age, email, imageUrl } = req.body;
-            const password = bcrypt.hashSync(req.body.password, 10);
+            if (req.body.password !== undefined) {
+                password = bcrypt.hashSync(req.body.password, 10);
+            } else {
+                password = req.body.password;
+            }
             const profileObject = {
                 username,
                 lastName,
@@ -161,7 +169,6 @@ exports.updateProfile = async (req, res) => {
             };
             await User.findOne({ where: { username: username } }).then(
                 (user) => {
-                    console.log(user.email);
                     if (
                         (user && user.username !== username) ||
                         (user && user.email !== email)
