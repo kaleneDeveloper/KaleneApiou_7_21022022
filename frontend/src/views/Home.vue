@@ -35,7 +35,7 @@
 </template>
 <script>
 import getPosts from "../services/posts";
-import user from "../services/users";
+// import user from "../services/users";
 import UpdateProfile from "../components/updateProfile";
 
 export default {
@@ -79,15 +79,15 @@ export default {
                 users: this.users,
             };
         },
-        fetchProfile() {
-            user.getProfile(this.$store.state.userToken.uuid)
-                .then((response) => {
-                    this.profile = response.data;
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
-        },
+        // fetchProfile() {
+        //     user.getProfile(this.$store.state.userToken.uuid)
+        //         .then((response) => {
+        //             this.profile = response.data;
+        //         })
+        //         .catch((error) => {
+        //             console.log(error);
+        //         });
+        // },
         fetchPostsUsers() {
             getPosts
                 .getPostUser(this.$store.state.userToken.uuid)

@@ -13,7 +13,7 @@
     </v-container>
 </template>
 <script>
-import getProfile from "../services/users";
+// import getProfile from "../services/users";
 export default {
     name: "User",
     data() {
@@ -35,11 +35,11 @@ export default {
         },
     },
     methods: {
-        fetchUser() {
-            getProfile.getProfile(this.$route.params.id).then((response) => {
-                this.user = response.data;
-            });
-        },
+        // fetchUser() {
+        //     getProfile.getProfile(this.$route.params.id).then((response) => {
+        //         this.user = response.data;
+        //     });
+        // },
     },
 };
 </script>

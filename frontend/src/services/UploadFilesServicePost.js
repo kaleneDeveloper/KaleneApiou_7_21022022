@@ -1,4 +1,5 @@
 import http from "../http-common";
+
 class UploadFilesServicePost {
     async uploadFilePost(file, onUploadProgress) {
         let formData = new FormData();
@@ -9,7 +10,6 @@ class UploadFilesServicePost {
         file.imageUrl.forEach((imageUrl) => {
             formData.append("posts", imageUrl);
         });
-
         return http.post("/api/posts", formData, {
             headers: {
                 "Content-Type": "multipart/form-data",

@@ -53,6 +53,7 @@ exports.postCreate = async (req, res) => {
     if (req.files) {
         const { title, content, userUuid } = req.body;
         try {
+            console.log(req.files);
             const user = await User.findOne({
                 where: { uuid: userUuid },
             });
