@@ -16,7 +16,6 @@ const http = axios.create({
     },
 });
 console.log("token", user.token);
-// console.log(this.$store.state.user.token);
 export default {
     getProfile(id) {
         return http.get("/api/users/id/" + id);

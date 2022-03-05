@@ -3,7 +3,7 @@
 # **GROUPOMANIA**
 
 Le site Groupomania, un réseau social d’entreprise.
-Project réalisé par TESSIER Sylvain pour Groupomania
+Project réalisé par APIOU Kalene pour Groupomania
 
 ● Stack : Express, Node.JS,JWT, Sequelize, Multer, Bcrypt, VueJS 3
 
