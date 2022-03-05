@@ -130,6 +130,7 @@ export default {
             }).then(() => {
                 this.parentForceRender();
                 this.dialog = false;
+                this.$router.go();
             });
         },
         deleteUser() {

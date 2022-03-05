@@ -161,6 +161,7 @@ exports.updateProfile = async (req, res) => {
             };
             await User.findOne({ where: { username: username } }).then(
                 (user) => {
+                    console.log(user.email);
                     if (
                         (user && user.username !== username) ||
                         (user && user.email !== email)

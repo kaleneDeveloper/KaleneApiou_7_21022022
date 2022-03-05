@@ -45,7 +45,7 @@ exports.commentDelete = async (req, res) => {
         const comment = await Comment.findAll({
             where: { uuid: req.params.uuid },
         });
-        if (comment.userId !== req.auth.userId && req.auth.admin !== true) {
+        if (comment[0].userId !== req.auth.userId && req.auth.admin !== true) {
             return res
                 .status(401)
                 .json({ error: "Vous n'avez pas les droits" });
