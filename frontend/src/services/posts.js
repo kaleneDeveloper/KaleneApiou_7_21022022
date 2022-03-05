@@ -1,5 +1,7 @@
-// import axios from "axios";
+import http from "../http-common";
 // let user = localStorage.getItem("user");
+// const axios = require("axios");
+
 // if (user) {
 //     user = JSON.parse(user);
 // } else {
@@ -11,11 +13,10 @@
 // const http = axios.create({
 //     baseURL: "http://localhost:3000",
 //     headers: {
-//         "Content-type": "application/json",
+//         Accept: "application/json",
 //         Authorization: "Bearer " + user.token,
 //     },
 // });
-import http from "../http-common";
 export default {
     getPosts() {
         return http.get("/api/posts");

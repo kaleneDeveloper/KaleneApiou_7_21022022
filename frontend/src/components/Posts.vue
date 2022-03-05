@@ -3,16 +3,16 @@
         <v-container v-for="(post, index) in posts" v-bind:key="index">
             <!-- POSTS -->
             <v-col class="mb-10">
-                <v-card>
+                <v-card class="test" color="blue-grey lighten-5">
                     <v-card-title>
-                        <h1>{{ post.title }}</h1>
+                        <h1>{{ post.user.username }}</h1>
                     </v-card-title>
                     <v-card-text>
                         <p>
                             {{ post.content }}
                         </p>
                     </v-card-text>
-                    <v-row>
+                    <v-row class="mx-1">
                         <v-col
                             v-for="(image, index) in imagesUrlSource(index)"
                             v-bind:key="index"
@@ -25,6 +25,7 @@
                     </v-row>
                     <v-row class="justify-space-between">
                         <div class="d-flex align-center">
+                            <!-- PROFILE -->
                             <template>
                                 <v-container>
                                     <div>
@@ -269,7 +270,7 @@
                                 dark
                                 v-bind:uuid="post.uuid"
                             >
-                                <v-icon>mdi-minus</v-icon>
+                                <v-icon>mdi-delete</v-icon>
                             </v-btn>
                         </div>
                     </v-row>
@@ -286,7 +287,7 @@
                 lg="12"
                 xl="12"
             >
-                <v-card>
+                <v-card color="blue-grey lighten-5">
                     <v-card-text>
                         <p>
                             {{ comment.content }}
@@ -389,7 +390,7 @@
                             x-small
                             dark
                         >
-                            <v-icon>mdi-minus</v-icon>
+                            <v-icon>mdi-delete</v-icon>
                         </v-btn>
                     </div>
                 </v-card>
@@ -590,9 +591,7 @@ export default {
                 : "";
         },
     },
-    mounted() {
-        
-    },
+    mounted() {},
 };
 </script>
 <style scoped>

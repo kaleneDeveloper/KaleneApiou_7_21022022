@@ -67,7 +67,15 @@
                 <v-app-bar-nav-icon
                     @click="drawer = !drawer"
                 ></v-app-bar-nav-icon>
-                <v-toolbar-title>Groupamania</v-toolbar-title>
+
+                <v-toolbar-title>
+                    <router-link to="/posts">
+                        <v-img
+                            src="../src/assets/logoGroupama.png"
+                            max-width="250"
+                        ></v-img>
+                    </router-link>
+                </v-toolbar-title>
             </v-app-bar>
             <router-view />
         </v-main>
@@ -89,7 +97,7 @@ export default {
         logout: function () {
             this.$store.dispatch("logout");
             this.$router.push("/login");
-            this.$router.go()
+            this.$router.go();
         },
     },
     mounted() {

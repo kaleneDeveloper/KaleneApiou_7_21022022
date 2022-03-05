@@ -1,7 +1,7 @@
 <template>
     <v-app id="inspire">
-        <v-main :key="componentKey" class="pl-0">
-            <div class="d-flex justify-center">
+        <v-main>
+            <div class="d-flex justify-center" :key="componentKey">
                 <div class="text-center">
                     <h2>Welcome {{ username }}</h2>
                     <h4>{{ email }}</h4>
@@ -35,7 +35,6 @@
 </template>
 <script>
 import getPosts from "../services/posts";
-// import user from "../services/users";
 import UpdateProfile from "../components/updateProfile";
 
 export default {
@@ -43,12 +42,12 @@ export default {
         UpdateProfile,
     },
     data: () => ({
-        componentKey: 0,
         users: [],
         drawer: null,
         posts: [],
         postsUser: [],
         profile: [],
+        componentKey: 0,
     }),
     computed: {
         imgUrl() {
@@ -74,20 +73,17 @@ export default {
     },
 
     methods: {
+        forceRerender() {
+            this.$store.dispatch("getUserInfos").then((response) => {
+                this.users = response.data;
+                this.componentKey += 1;
+            });
+        },
         data() {
             return {
                 users: this.users,
             };
         },
-        // fetchProfile() {
-        //     user.getProfile(this.$store.state.userToken.uuid)
-        //         .then((response) => {
-        //             this.profile = response.data;
-        //         })
-        //         .catch((error) => {
-        //             console.log(error);
-        //         });
-        // },
         fetchPostsUsers() {
             getPosts
                 .getPostUser(this.$store.state.userToken.uuid)
@@ -97,9 +93,6 @@ export default {
                 .catch((error) => {
                     console.log(error);
                 });
-        },
-        forceRerender() {
-            this.componentKey += 1;
         },
     },
     mounted() {
@@ -118,7 +111,6 @@ export default {
         this.$store.dispatch("getUserInfos").then((response) => {
             this.users = response.data;
         });
-        
     },
 };
 </script>

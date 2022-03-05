@@ -1,5 +1,5 @@
 <template>
-    <v-row justify="center" class="mt-10 mb-10">
+    <v-row justify="center" class="mt-10 mb-10 mx-auto">
         <v-dialog v-model="dialog" persistent max-width="600px">
             <template v-slot:activator="{ on, attrs }">
                 <v-btn
@@ -111,7 +111,7 @@ export default {
     },
     methods: {
         forceRerender() {
-            this.componentKey += 1;
+            this.parentForceRender();
         },
         profile() {
             this.ageUpdate = this.parentData.users.profile[0].age;
@@ -130,8 +130,9 @@ export default {
                 imageUrl: this.parentData.users.profile[0].imgUrl,
             }).then(() => {
                 this.parentForceRender();
+                this.componentKey += 1;
                 this.dialog = false;
-                this.$router.go();
+                // this.$router.go();
             });
         },
         deleteUser() {

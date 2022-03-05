@@ -6,12 +6,7 @@
                 ref="addPost"
                 :parentForceRender="forceRerender"
             ></add-post>
-            <v-container>
-                <v-btn class="mx-2 btn-add-post" fab dark color="indigo">
-                    <v-icon dark> mdi-plus </v-icon>
-                </v-btn>
-            </v-container>
-            <!-- POSTS AND COMMENTS -->
+            
             <get-posts :parentForceRender="forceRerender"></get-posts>
         </v-main>
     </v-app>

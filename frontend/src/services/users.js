@@ -1,13 +1,5 @@
 // import axios from "axios";
-let user = localStorage.getItem("user");
-if (user) {
-    user = JSON.parse(user);
-} else {
-    user = {
-        userId: 0,
-        token: "",
-    };
-}
+import http from "../http-common";
 // const http = axios.create({
 //     baseURL: "http://localhost:3000",
 //     headers: {
@@ -15,8 +7,6 @@ if (user) {
 //         Authorization: "Bearer " + user.token,
 //     },
 // });
-import http from "../http-common";
-console.log("token", user.token);
 export default {
     getProfile(id) {
         return http.get("/api/users/id/" + id);

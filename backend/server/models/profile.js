@@ -15,7 +15,11 @@ module.exports = (sequelize, DataTypes) => {
             userId: { type: DataTypes.INTEGER, allowNull: false },
             userUuid: { type: DataTypes.STRING, allowNull: false },
             username: { type: DataTypes.STRING, allowNull: false },
-            lastName: { type: DataTypes.STRING, allowNull: true },
+            lastName: {
+                type: DataTypes.STRING,
+                allowNull: true,
+                defaultValue: "",
+            },
             password: { type: DataTypes.STRING, allowNull: true },
             email: { type: DataTypes.STRING, allowNull: false },
             imageUrl: {
