@@ -35,4 +35,7 @@ export default {
             },
         });
     },
+    deleteUser(id) {
+        return http.delete("/api/users/" + id);
+    },
 };

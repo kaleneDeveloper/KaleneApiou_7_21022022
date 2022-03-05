@@ -105,10 +105,13 @@ exports.updateProfile = async (req, res) => {
         try {
             await User.findOne({ where: { username: username } })
                 .then((user) => {
-                    if (user && user.username !== username) {
-                        return res
-                            .status(401)
-                            .send({ message: "Username already exists" });
+                    if (
+                        (user && user.username !== username) ||
+                        (user && user.email !== email)
+                    ) {
+                        return res.status(401).send({
+                            message: "Username or email already exists",
+                        });
                     }
                     const profile = Profile.findAll({
                         where: { userUuid: req.params.uuid },
@@ -135,6 +138,9 @@ exports.updateProfile = async (req, res) => {
                     Profile.update(profilObject, {
                         where: { userUuid: req.params.uuid },
                     });
+                    User.update(profilObject, {
+                        where: { userUuid: req.params.uuid },
+                    });
                     return res.send(profilObject);
                 })
                 .catch((error) => res.status(500).json({ error }));
@@ -155,14 +161,20 @@ exports.updateProfile = async (req, res) => {
             };
             await User.findOne({ where: { username: username } }).then(
                 (user) => {
-                    if (user && user.username !== username) {
-                        return res
-                            .status(401)
-                            .send({ message: "Username already exists" });
+                    if (
+                        (user && user.username !== username) ||
+                        (user && user.email !== email)
+                    ) {
+                        return res.status(401).send({
+                            message: "Username or email already exists",
+                        });
                     }
 
                     Profile.update(profileObject, {
                         where: { userUuid: req.params.uuid },
+                    });
+                    User.update(profileObject, {
+                        where: { uuid: req.params.uuid },
                     });
                     return res.send(profileObject);
                 }

@@ -58,6 +58,18 @@
                                     style="width: 60px"
                                 ></v-text-field>
                             </v-col>
+                            <v-col cols="12" sm="6">
+                                <v-btn
+                                    normal
+                                    @click="deleteUser"
+                                    depressed
+                                    color="red"
+                                >
+                                    <span style="font-size: 14px" class="font-weight-bold">
+                                        supprimer profile</span
+                                    >
+                                </v-btn>
+                            </v-col>
                         </v-row>
                     </v-container>
                 </v-card-text>
@@ -115,6 +127,15 @@ export default {
             }).then(() => {
                 this.parentForceRender();
                 this.dialog = false;
+            });
+        },
+        deleteUser() {
+            confirm("Voulez-vous vraiment supprimer votre profile ?");
+            user.deleteUser(this.parentData.users.uuid).then(() => {
+                this.parentForceRender();
+                this.dialog = false;
+                this.$store.dispatch("logout");
+                this.$router.push("/login");
             });
         },
     },

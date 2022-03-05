@@ -39,7 +39,7 @@
     </v-container>
 </template>
 <script>
-import uploadImage from "../components/Uploadimage";
+import uploadImage from "../components/UploadImage";
 import posts from "../services/posts.js";
 export default {
     name: "add-post",
