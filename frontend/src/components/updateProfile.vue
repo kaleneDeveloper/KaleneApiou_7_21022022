@@ -135,14 +135,18 @@ export default {
             });
         },
         deleteUser() {
-            confirm("Voulez-vous vraiment supprimer votre profile ?");
-            user.deleteUser(this.parentData.users.uuid).then(() => {
-                this.parentForceRender();
-                this.dialog = false;
-                this.$store.dispatch("logout");
-                this.$router.push("/login");
-                this.$router.go();
-            });
+            let confirmDelete = confirm(
+                "Voulez-vous vraiment supprimer votre profile ?"
+            );
+            if (confirmDelete) {
+                user.deleteUser(this.parentData.users.uuid).then(() => {
+                    this.parentForceRender();
+                    this.dialog = false;
+                    this.$store.dispatch("logout");
+                    this.$router.push("/login");
+                    this.$router.go();
+                });
+            }
         },
     },
     mounted() {

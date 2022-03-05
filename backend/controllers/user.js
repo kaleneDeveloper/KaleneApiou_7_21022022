@@ -201,7 +201,10 @@ exports.delete = async (req, res) => {
         const profile = await Profile.findOne({
             where: { userUuid: req.params.uuid },
         });
-        const filename = profile.imageUrl.split("/images/uploads/profiles/")[1];
+        const filename = profile.imageUrl.split(
+            "/images/uploads/profiles/default/"
+        )[1];
+        console.log(`./../images/uploads/profiles/${filename}`);
         fs.unlink(`./../images/uploads/profiles/${filename}`, () => {});
         await user.destroy();
         await profile.destroy();

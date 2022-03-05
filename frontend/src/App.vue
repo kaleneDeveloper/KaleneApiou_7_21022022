@@ -30,7 +30,10 @@
                                 </v-list-item>
                             </router-link>
 
-                            <router-link to="/posts">
+                            <router-link
+                                v-if="this.$store.state.user.userId !== 0"
+                                to="/posts"
+                            >
                                 <v-list-item>
                                     <v-list-item-icon>
                                         <v-icon large>mdi-post</v-icon>
@@ -86,7 +89,7 @@ export default {
         logout: function () {
             this.$store.dispatch("logout");
             this.$router.push("/login");
-            // this.$router.go()
+            this.$router.go()
         },
     },
     mounted() {

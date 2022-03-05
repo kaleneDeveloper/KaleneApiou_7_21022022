@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.STRING,
                 allowNull: false,
                 defaultValue:
-                    "http://localhost:3000/images/uploads/profiles/blank-profile.png",
+                    "http://localhost:3000/images/uploads/profiles/default/blank-profile.png",
             },
             age: { type: DataTypes.INTEGER, allowNull: true, defaultValue: 0 },
         },
