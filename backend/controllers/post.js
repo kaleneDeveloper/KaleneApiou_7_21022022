@@ -146,6 +146,7 @@ exports.deletePost = async (req, res) => {
             where: { uuid: req.params.uuid },
             include: ["comments"],
         });
+       
         if (post.userId !== req.auth.userId && req.auth.admin !== true) {
             return res
                 .status(401)

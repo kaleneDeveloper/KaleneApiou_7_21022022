@@ -65,7 +65,10 @@
                                     depressed
                                     color="red"
                                 >
-                                    <span style="font-size: 14px" class="font-weight-bold">
+                                    <span
+                                        style="font-size: 14px"
+                                        class="font-weight-bold"
+                                    >
                                         supprimer profile</span
                                     >
                                 </v-btn>
@@ -136,6 +139,7 @@ export default {
                 this.dialog = false;
                 this.$store.dispatch("logout");
                 this.$router.push("/login");
+                this.$router.go();
             });
         },
     },

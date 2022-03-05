@@ -86,6 +86,7 @@ export default {
         logout: function () {
             this.$store.dispatch("logout");
             this.$router.push("/login");
+            this.$router.go()
         },
     },
     mounted() {
@@ -112,19 +113,6 @@ span {
     color: #2c3e50;
     height: 100vh;
 }
-/* .logout {
-    height: 2rem;
-    border-radius: 5px;
-    border: none;
-    background-color: #00a8ff;
-    color: white;
-    font-weight: bold;
-    font-size: 12px;
-    cursor: pointer;
-    margin: auto;
-    padding: 0 1rem;
-    max-width: 100px;
-} */
 .v-btn.v-size--default {
     font-size: 2rem;
 }
