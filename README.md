@@ -77,6 +77,14 @@ npm install
 npm run serve
 ```
 
+## Création d'un Admin
+
+```
+Creer un compte puis ouvrir la base donnée
+Rentrer dans la tables "users"
+Changer la valeur de "admin" de 0 à 1
+```
+
 ### Contact
 
 Kalene APIOU : <apiou.kalene@gmail.com>
