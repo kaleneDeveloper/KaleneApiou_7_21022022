@@ -1,9 +1,9 @@
 <template>
-    <v-container>
-        <v-container v-for="(post, index) in posts" v-bind:key="index">
+    <v-container id="main">
+        <v-container v-for="(post, index) in posts" v-bind:key="index" class="main">
             <!-- POSTS -->
             <v-col class="mb-10">
-                <v-card class="test" color="blue-grey lighten-5">
+                <v-card class="test" color="blue-grey lighten-4">
                     <v-card-title>
                         <h1>{{ post.user.username }}</h1>
                     </v-card-title>
@@ -416,6 +416,7 @@
                     Add comment
                 </v-btn>
             </v-card-text>
+        <v-divider class="divider"></v-divider>
         </v-container>
     </v-container>
 </template>
